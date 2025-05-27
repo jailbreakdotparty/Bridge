@@ -30,7 +30,7 @@ struct ContentView: View {
                     .listRowSeparator(.hidden)
                     .listRowInsets(.init(top: 8, leading: 16, bottom: 8, trailing: 16))
             }
-            .listStyle(PlainListStyle())
+            .listStyle(.plain)
             .onAppear {
                 appList = storedAppList.components(separatedBy: "\n")
                 favoritesList = storedFavoritesList.components(separatedBy: "\n")
@@ -75,10 +75,9 @@ struct ContentView: View {
                 }
             }
         }
-        
-         .sheet(isPresented: .constant(!isSetupCompleted)) {
-         SetupView()
-         }
+        .sheet(isPresented: .constant(!isSetupCompleted)) {
+            SetupView()
+        }
     }
 }
 
