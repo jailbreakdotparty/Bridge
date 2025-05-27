@@ -4,7 +4,7 @@ set -e
 
 cd "$(dirname "$0")"
 
-APPLICATION_NAME=Burst
+APPLICATION_NAME=Bridge
 
 echo "[*] $APPLICATION_NAME Build Script"
 
