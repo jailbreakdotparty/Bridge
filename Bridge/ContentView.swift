@@ -8,6 +8,10 @@
 import SwiftUI
 import UIKit
 
+class SetupRefreshState: ObservableObject {
+    @Published var shouldRefreshAfterSetup: Bool = false
+}
+
 struct ContentView: View {
     @Environment(\.openURL) var openURL
     
@@ -19,6 +23,8 @@ struct ContentView: View {
     @AppStorage("appList") private var storedAppList: String = "No Data"
     @AppStorage("favoritesList") private var storedFavoritesList: String = "No Data"
     @AppStorage("isSetupCompleted") private var isSetupCompleted: Bool = false
+    
+    @StateObject var shouldRefreshAfterSetup = SetupRefreshState()
     
     var body: some View {
         NavigationStack {
@@ -58,6 +64,7 @@ struct ContentView: View {
                             isSetupCompleted = false
                             appList = storedAppList.components(separatedBy: "\n")
                             favoritesList = storedFavoritesList.components(separatedBy: "\n")
+                            exit(0)
                         } label: {
                             Label("Reset All", systemImage: "trash")
                         }
@@ -75,8 +82,12 @@ struct ContentView: View {
                 }
             }
         }
+        .onChange(of: shouldRefreshAfterSetup.shouldRefreshAfterSetup) {
+            appList = storedAppList.components(separatedBy: "\n")
+            favoritesList = storedFavoritesList.components(separatedBy: "\n")
+        }
         .sheet(isPresented: .constant(!isSetupCompleted)) {
-            SetupView()
+            SetupView(shouldRefreshAfterSetup: shouldRefreshAfterSetup)
         }
     }
 }

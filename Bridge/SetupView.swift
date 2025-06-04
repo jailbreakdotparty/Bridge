@@ -27,8 +27,12 @@ struct SetupView: View {
     @Environment(\.openURL) var openURL
     @State private var appList: [String] = [""]
     @AppStorage("appList") private var storedAppList: String = ""
+    @AppStorage("favoritesList") private var storedFavoritesList: String = "No Data"
     let pasteboard = UIPasteboard.general
     @AppStorage("isSetupCompleted") private var isSetupCompleted: Bool = false
+    @Environment(\.colorScheme) var colorScheme
+    
+    @ObservedObject var shouldRefreshAfterSetup = SetupRefreshState()
     
     var body: some View {
         NavigationStack {
@@ -125,7 +129,9 @@ struct SetupView: View {
                         if let string = pasteboard.string {
                             appList = string.components(separatedBy: "\n")
                             storedAppList = string
+                            storedFavoritesList = "FTMInternal-4"
                             isSetupCompleted = true
+                            shouldRefreshAfterSetup.shouldRefreshAfterSetup = true
                             dismiss()
                         }
                     }) {
@@ -149,9 +155,15 @@ struct SetupView: View {
             }
             .padding(.horizontal, 30)
             .background(
-                LinearGradient(colors: [Color(hex: "#260A34"), Color(hex: "000000")], startPoint: .top, endPoint: .bottom)
-                    .ignoresSafeArea()
+                LinearGradient(
+                    colors: colorScheme == .light
+                    ? [Color(hex: "#DC95FF"), Color(hex: "#FFFFFF")]
+                    : [Color(hex: "#260A34"), Color(hex: "#000000")],
+                    startPoint: .top,
+                    endPoint: .bottom
                 )
+                .ignoresSafeArea()
+            )
             .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
