@@ -61,7 +61,7 @@ struct SetupView: View {
                             .font(.system(.title))
                             .foregroundStyle(.purple)
                         VStack(alignment: .leading) {
-                            Text("Open Internal Apps")
+                            Text("Open System Apps")
                                 .font(.system(.title2, weight: .medium))
                             Text("Open applications that are inaccessible to the user.")
                                 .font(.system(.callout))
@@ -81,7 +81,7 @@ struct SetupView: View {
                         VStack(alignment: .leading) {
                             Text("Export Applications")
                                 .font(.system(.title2, weight: .medium))
-                            Text("Export the containers of Internal applications.")
+                            Text("Export the containers of System applications.")
                                 .font(.system(.callout))
                                 .opacity(0.8)
                         }
@@ -129,7 +129,7 @@ struct SetupView: View {
                         if let string = pasteboard.string {
                             appList = string.components(separatedBy: "\n")
                             storedAppList = string
-                            storedFavoritesList = "FTMInternal-4"
+                            storedFavoritesList = "FTMInternal-4?Applications"
                             isSetupCompleted = true
                             shouldRefreshAfterSetup.shouldRefreshAfterSetup = true
                             dismiss()

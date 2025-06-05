@@ -15,8 +15,8 @@ class SetupRefreshState: ObservableObject {
 struct ContentView: View {
     @Environment(\.openURL) var openURL
     
-    @State private var appList: [String] = [""]
-    @State private var favoritesList: [String] = [""]
+    @State private var appList: [(name: String, fullLine: String)] = []
+    @State private var favoritesList: [(name: String, fullLine: String)] = []
     
     let pasteboard = UIPasteboard.general
     
@@ -38,8 +38,22 @@ struct ContentView: View {
             }
             .listStyle(.plain)
             .onAppear {
-                appList = storedAppList.components(separatedBy: "\n")
-                favoritesList = storedFavoritesList.components(separatedBy: "\n")
+                appList = storedAppList
+                    .components(separatedBy: "\n")
+                    .filter { !$0.isEmpty }
+                    .map { line in
+                        let parts = line.split(separator: "?", maxSplits: 1, omittingEmptySubsequences: true)
+                        let name = parts.first.map(String.init) ?? ""
+                        return (name: name, fullLine: line)
+                    }
+                favoritesList = storedFavoritesList
+                    .components(separatedBy: "\n")
+                    .filter { !$0.isEmpty }
+                    .map { line in
+                        let parts = line.split(separator: "?", maxSplits: 1, omittingEmptySubsequences: true)
+                        let name = parts.first.map(String.init) ?? ""
+                        return (name: name, fullLine: line)
+                    }
             }
             .navigationTitle("Bridge")
             .toolbar {
@@ -48,13 +62,13 @@ struct ContentView: View {
                         Button {
                             storedAppList = "No Data"
                             isSetupCompleted = false
-                            appList = storedAppList.components(separatedBy: "\n")
+                            appList = []
                         } label: {
                             Label("Reset Applist", systemImage: "square.grid.2x2")
                         }
                         Button {
                             storedFavoritesList = "No Data"
-                            favoritesList = storedFavoritesList.components(separatedBy: "\n")
+                            favoritesList = []
                         } label: {
                             Label("Reset Favorites List", systemImage: "star")
                         }
@@ -62,8 +76,8 @@ struct ContentView: View {
                             storedFavoritesList = "No Data"
                             storedAppList = "No Data"
                             isSetupCompleted = false
-                            appList = storedAppList.components(separatedBy: "\n")
-                            favoritesList = storedFavoritesList.components(separatedBy: "\n")
+                            appList = []
+                            favoritesList = []
                             exit(0)
                         } label: {
                             Label("Reset All", systemImage: "trash")
@@ -74,8 +88,22 @@ struct ContentView: View {
                 }
                 ToolbarItemGroup(placement: .topBarTrailing) {
                     Button(action: {
-                        appList = storedAppList.components(separatedBy: "\n")
-                        favoritesList = storedFavoritesList.components(separatedBy: "\n")
+                        appList = storedAppList
+                            .components(separatedBy: "\n")
+                            .filter { !$0.isEmpty }
+                            .map { line in
+                                let parts = line.split(separator: "?", maxSplits: 1, omittingEmptySubsequences: true)
+                                let name = parts.first.map(String.init) ?? ""
+                                return (name: name, fullLine: line)
+                            }
+                        favoritesList = storedFavoritesList
+                            .components(separatedBy: "\n")
+                            .filter { !$0.isEmpty }
+                            .map { line in
+                                let parts = line.split(separator: "?", maxSplits: 1, omittingEmptySubsequences: true)
+                                let name = parts.first.map(String.init) ?? ""
+                                return (name: name, fullLine: line)
+                            }
                     }) {
                         Image(systemName: "arrow.clockwise.circle")
                     }
@@ -83,8 +111,22 @@ struct ContentView: View {
             }
         }
         .onChange(of: shouldRefreshAfterSetup.shouldRefreshAfterSetup) {
-            appList = storedAppList.components(separatedBy: "\n")
-            favoritesList = storedFavoritesList.components(separatedBy: "\n")
+            appList = storedAppList
+                .components(separatedBy: "\n")
+                .filter { !$0.isEmpty }
+                .map { line in
+                    let parts = line.split(separator: "?", maxSplits: 1, omittingEmptySubsequences: true)
+                    let name = parts.first.map(String.init) ?? ""
+                    return (name: name, fullLine: line)
+                }
+            favoritesList = storedFavoritesList
+                .components(separatedBy: "\n")
+                .filter { !$0.isEmpty }
+                .map { line in
+                    let parts = line.split(separator: "?", maxSplits: 1, omittingEmptySubsequences: true)
+                    let name = parts.first.map(String.init) ?? ""
+                    return (name: name, fullLine: line)
+                }
         }
         .sheet(isPresented: .constant(!isSetupCompleted)) {
             SetupView(shouldRefreshAfterSetup: shouldRefreshAfterSetup)
@@ -93,16 +135,16 @@ struct ContentView: View {
 }
 
 struct FavoritesSection: View {
-    @Binding var favoritesList: [String]
+    @Binding var favoritesList: [(name: String, fullLine: String)]
     let openURL: OpenURLAction
     
     var body: some View {
         Section(header: Label("Favorites", systemImage: "star")) {
-            ForEach(favoritesList, id: \.self) { line in
-                AppMenu(line: line, openURL: openURL)
+            ForEach(favoritesList, id: \.fullLine) { favorite in
+                AppMenu(line: favorite.fullLine, displayName: favorite.name, openURL: openURL)
                     .swipeActions {
                         Button(role: .destructive) {
-                            favoritesList.removeAll { $0 == line }
+                            favoritesList.removeAll { $0.fullLine == favorite.fullLine }
                         } label: {
                             Label("Remove", systemImage: "trash")
                         }
@@ -113,19 +155,18 @@ struct FavoritesSection: View {
 }
 
 struct ApplicationsSection: View {
-    let appList: [String]
-    @Binding var favoritesList: [String]
+    let appList: [(name: String, fullLine: String)]
+    @Binding var favoritesList: [(name: String, fullLine: String)]
     let openURL: OpenURLAction
     
     var body: some View {
-        Section(header: Label("All Applications", systemImage: "list.bullet")) {
-            
-            ForEach(appList, id: \.self) { line in
-                AppMenu(line: line, openURL: openURL)
+        Section(header: Label("All Applications (\(appList.count) Apps)", systemImage: "list.bullet")) {
+            ForEach(appList, id: \.fullLine) { app in
+                AppMenu(line: app.fullLine, displayName: app.name, openURL: openURL)
                     .swipeActions {
                         Button {
-                            if !favoritesList.contains(line) {
-                                favoritesList.append(line)
+                            if !favoritesList.contains(where: { $0.fullLine == app.fullLine }) {
+                                favoritesList.append(app)
                             }
                         } label: {
                             Label("Add to Favorites", systemImage: "plus")
@@ -137,8 +178,10 @@ struct ApplicationsSection: View {
     }
 }
 
+
 struct AppMenu: View {
     let line: String
+    let displayName: String
     let openURL: OpenURLAction
     
     var body: some View {
@@ -156,7 +199,7 @@ struct AppMenu: View {
         } label: {
             HStack {
                 Image(systemName: "app.fill")
-                Text(line)
+                Text(displayName)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(15)
