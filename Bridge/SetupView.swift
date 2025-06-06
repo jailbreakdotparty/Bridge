@@ -25,12 +25,15 @@ extension Color {
 struct SetupView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.openURL) var openURL
+    @Environment(\.colorScheme) var colorScheme
+    
     @State private var appList: [String] = [""]
+    @State private var hasSetupShortcutBeenRan: Bool = false
+    
     @AppStorage("appList") private var storedAppList: String = ""
     @AppStorage("favoritesList") private var storedFavoritesList: String = "No Data"
     let pasteboard = UIPasteboard.general
     @AppStorage("isSetupCompleted") private var isSetupCompleted: Bool = false
-    @Environment(\.colorScheme) var colorScheme
     
     @ObservedObject var shouldRefreshAfterSetup = SetupRefreshState()
     
@@ -89,7 +92,7 @@ struct SetupView: View {
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     HStack {
-                        Image(systemName: "figure.run")
+                        Image(systemName: "externaldrive.fill")
                             .resizable()
                             .scaledToFit()
                             .frame(width: 40, height: 40)
@@ -97,9 +100,9 @@ struct SetupView: View {
                             .font(.system(.title))
                             .foregroundStyle(.purple)
                         VStack(alignment: .leading) {
-                            Text("Connect with Shortcuts")
+                            Text("Multiple Partitions")
                                 .font(.system(.title2, weight: .medium))
-                            Text("Thanks to the extra permissions Shortcuts has, you can open these applications with almost no hassle.")
+                            Text("Open Applications on /System/Library/CoreServices and /Applications.")
                                 .font(.system(.callout))
                                 .opacity(0.8)
                         }
@@ -111,41 +114,74 @@ struct SetupView: View {
                 // MARK: Buttons
                 VStack(spacing: 10) {
                     Button(action: {
-                        openURL(URL(string: "shortcuts://run-shortcut?name=Bridge")!)
+                        Haptic.shared.play(.soft)
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                            openURL(URL(string: "shortcuts://run-shortcut?name=Bridge")!)
+                            hasSetupShortcutBeenRan = true
+                        }
                     }) {
                         HStack {
-                            Image(systemName: "hammer.fill")
-                            Text("Run Setup Shortcut")
+                            if hasSetupShortcutBeenRan {
+                                HStack {
+                                    Image(systemName: "checkmark")
+                                    Text("Run Setup Shortcut")
+                                }
+                                .padding()
+                                .frame(maxWidth: .infinity)
+                                .background(.green.opacity(0.2))
+                                .foregroundStyle(.green)
+                            } else {
+                                HStack {
+                                    Image(systemName: "hammer.fill")
+                                    Text("Run Setup Shortcut")
+                                }
+                                .padding()
+                                .frame(maxWidth: .infinity)
+                                .background(.purple.opacity(0.2))
+                                .foregroundStyle(.purple)
+                            }
                         }
-                        .frame(maxWidth: .infinity)
+                        .clipShape(RoundedRectangle(cornerRadius: 14))
                     }
-                    .padding()
-                    .background(.purple.opacity(0.2))
-                    .foregroundStyle(.purple)
-                    .frame(maxWidth: .infinity)
-                    .clipShape(RoundedRectangle(cornerRadius: 14))
                     
                     Button(action: {
-                        if let string = pasteboard.string {
-                            appList = string.components(separatedBy: "\n")
-                            storedAppList = string
-                            storedFavoritesList = "FTMInternal-4?Applications"
-                            isSetupCompleted = true
-                            shouldRefreshAfterSetup.shouldRefreshAfterSetup = true
-                            dismiss()
+                        Haptic.shared.play(.soft)
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                            if let string = pasteboard.string {
+                                appList = string.components(separatedBy: "\n")
+                                storedAppList = string
+                                storedFavoritesList = "FTMInternal-4?Applications"
+                                isSetupCompleted = true
+                                shouldRefreshAfterSetup.shouldRefreshAfterSetup = true
+                                dismiss()
+                            }
                         }
+                        
                     }) {
                         HStack {
-                            Image(systemName: "checkmark.circle.fill")
-                            Text("Complete Setup")
+                            if hasSetupShortcutBeenRan {
+                                HStack {
+                                    Image(systemName: "arrow.forward.circle")
+                                    Text("Complete Setup")
+                                }
+                                .padding()
+                                .frame(maxWidth: .infinity)
+                                .background(.purple.opacity(0.2))
+                                .foregroundStyle(.purple)
+                            } else {
+                                HStack {
+                                    Image(systemName: "arrow.forward.circle.fill")
+                                    Text("Complete Setup")
+                                }
+                                .padding()
+                                .frame(maxWidth: .infinity)
+                                .background(.gray.opacity(0.2))
+                                .foregroundStyle(.gray)
+                            }
                         }
-                        .frame(maxWidth: .infinity)
+                        .clipShape(RoundedRectangle(cornerRadius: 14))
                     }
-                    .padding()
-                    .background(.green.opacity(0.2))
-                    .foregroundStyle(.green)
-                    .frame(maxWidth: .infinity)
-                    .clipShape(RoundedRectangle(cornerRadius: 14))
+                    .disabled(hasSetupShortcutBeenRan ? false : true)
                     
                     Text("**Disclaimer:** This app cannot read applications that are installed by the user. It can only open and read applications that aren't shown to the user, referred to as internal applications.")
                         .font(.system(.caption))

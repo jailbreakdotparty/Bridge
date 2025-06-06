@@ -60,6 +60,7 @@ struct ContentView: View {
                 ToolbarItemGroup(placement: .topBarLeading) {
                     Menu {
                         Button {
+                            Haptic.shared.play(.soft)
                             storedAppList = "No Data"
                             isSetupCompleted = false
                             appList = []
@@ -67,18 +68,22 @@ struct ContentView: View {
                             Label("Reset Applist", systemImage: "square.grid.2x2")
                         }
                         Button {
+                            Haptic.shared.play(.soft)
                             storedFavoritesList = "No Data"
                             favoritesList = []
                         } label: {
                             Label("Reset Favorites List", systemImage: "star")
                         }
                         Button {
-                            storedFavoritesList = "No Data"
-                            storedAppList = "No Data"
-                            isSetupCompleted = false
-                            appList = []
-                            favoritesList = []
-                            exit(0)
+                            Haptic.shared.play(.soft)
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                                storedFavoritesList = "No Data"
+                                storedAppList = "No Data"
+                                isSetupCompleted = false
+                                appList = []
+                                favoritesList = []
+                                exit(0)
+                            }
                         } label: {
                             Label("Reset All", systemImage: "trash")
                         }
@@ -88,6 +93,7 @@ struct ContentView: View {
                 }
                 ToolbarItemGroup(placement: .topBarTrailing) {
                     Button(action: {
+                        Haptic.shared.play(.soft)
                         appList = storedAppList
                             .components(separatedBy: "\n")
                             .filter { !$0.isEmpty }
@@ -144,6 +150,7 @@ struct FavoritesSection: View {
                 AppMenu(line: favorite.fullLine, displayName: favorite.name, openURL: openURL)
                     .swipeActions {
                         Button(role: .destructive) {
+                            Haptic.shared.play(.soft)
                             favoritesList.removeAll { $0.fullLine == favorite.fullLine }
                         } label: {
                             Label("Remove", systemImage: "trash")
@@ -165,6 +172,7 @@ struct ApplicationsSection: View {
                 AppMenu(line: app.fullLine, displayName: app.name, openURL: openURL)
                     .swipeActions {
                         Button {
+                            Haptic.shared.play(.soft)
                             if !favoritesList.contains(where: { $0.fullLine == app.fullLine }) {
                                 favoritesList.append(app)
                             }
@@ -187,12 +195,18 @@ struct AppMenu: View {
     var body: some View {
         Menu {
             Button {
-                openURL(URL(string: "shortcuts://run-shortcut?name=Bridge&input=Open*\(line)")!)
+                Haptic.shared.play(.soft)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                    openURL(URL(string: "shortcuts://run-shortcut?name=Bridge&input=Open*\(line)")!)
+                }
             } label: {
                 Label("Open Application", systemImage: "arrow.up.forward.app")
             }
             Button {
-                openURL(URL(string: "shortcuts://run-shortcut?name=Bridge&input=Export*\(line)")!)
+                Haptic.shared.play(.soft)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                    openURL(URL(string: "shortcuts://run-shortcut?name=Bridge&input=Export*\(line)")!)
+                }
             } label: {
                 Label("Export Application Container", systemImage: "square.and.arrow.down.fill")
             }
