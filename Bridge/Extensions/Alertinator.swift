@@ -13,21 +13,21 @@ public class Alertinator {
     
     var alertController: UIAlertController?
     
-    func alert(title: String, body: String, showCancel: Bool = true) {
+    func alert(title: String, body: String, showCancel: Bool = true, actionLabel: String = "OK") {
         Task { @MainActor in
             alertController = UIAlertController(title: title, message: body, preferredStyle: .alert)
             if showCancel {
-                alertController?.addAction(.init(title: "OK", style: .cancel))
+                alertController?.addAction(.init(title: actionLabel, style: .cancel))
             }
             alertController?.view.tintColor = UIColor(named: "AccentColor")
             self.present(alertController!)
         }
     }
     
-    func alert(title: String, body: String, showCancel: Bool = true, action: @escaping () -> Void) {
+    func alert(title: String, body: String, showCancel: Bool = true, actionLabel: String = "OK", action: @escaping () -> Void) {
         Task { @MainActor in
             alertController = UIAlertController(title: title, message: body, preferredStyle: .alert)
-            alertController?.addAction(.init(title: "OK", style: .default) { _ in
+            alertController?.addAction(.init(title: actionLabel, style: .default) { _ in
                 action()
             })
             if showCancel {

@@ -7,14 +7,25 @@
 
 import SwiftUI
 import UIKit
+import Combine
 
 func handleApplication(handleType: String, applicationName: String) {
     @Environment(\.openURL) var openURL
+    @AppStorage("openWithShortcuts") var openWithShortcuts: Bool = false
+    @AppStorage("showFirstTimeAlert") var showFirstTimeAlert: Bool = true
     
     if handleType == "open" {
+        if showFirstTimeAlert {
+            Alertinator.shared.alert(title: "Notice!", body: "Some apps may not open properly. If an app does not seem to open properly, press the icon in the top right of the toolbar. This will switch between the Shortcuts and in-app method of opening applications.")
+            showFirstTimeAlert = false
+        }
         let bundleID = "com.apple.\(applicationName)"
         if isDatAppInstalled(bundleID) {
-            LSApplicationWorkspace.default().openApplication(withBundleID: bundleID)
+            if openWithShortcuts {
+                openURL(URL(string: "shortcuts://run-shortcut?name=Bridge&input=Open*\(applicationName)")!)
+            } else {
+                LSApplicationWorkspace.default().openApplication(withBundleID: bundleID)
+            }
         } else {
             Alertinator.shared.alert(title: "Error!", body: "The application was not found, so it could not be opened.", actionLabel: "Try with Shortcuts", action: {
                 openURL(URL(string: "shortcuts://run-shortcut?name=Bridge&input=Open*\(applicationName)")!)

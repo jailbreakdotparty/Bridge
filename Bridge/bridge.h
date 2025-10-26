@@ -3,6 +3,9 @@
 //  dirtyZero
 //
 //  Created by Skadz on 5/20/25.
+//  thanks again skadz
+//  i'm not sure how much of this application was indirectly made by you atp
+//  sorry twin
 //
 
 #ifndef bridge_h
