@@ -2,7 +2,7 @@
 ### An *internal* app opener & extractor for iOS/iPadOS 16.0 - 26.0.1*
 [Latest Release]() • [Support Server](https://jailbreak.party/discord) • [Website](https://jailbreak.party)
 
-*While Bridge is still techincally supported on iOS 26.1 and later, the amount of applications that you can read are severly limtied, and almost all of the fun/useful applications aren't even readable. 
+*While Bridge is still technically supported on iOS 26.1 and later, the amount of applications that you can read are severely limited, and almost all of the fun/useful applications aren't even readable. 
 
 > [!WARNING]
 > This tool does **not** show any applications that were installed by the user. If you want functionality like that, please consider using [Antrag](https://github.com/khcrysalis/Antrag) (note that this cannot extract user data from applications).
