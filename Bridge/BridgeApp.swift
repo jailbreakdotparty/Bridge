@@ -6,8 +6,10 @@
 //
 
 import SwiftUI
+import DeviceKit
 
 var weOnADebugBuild: Bool = false
+let device = Device.current
 
 @main
 struct BridgeApp: App {
@@ -34,4 +36,14 @@ extension UIApplication {
     static var isPad: Bool {
         UIDevice.current.userInterfaceIdiom == .pad
     }
+}
+
+func doubleSystemVersion() -> Double {
+    let rawSystemVersion = UIDevice.current.systemVersion
+    let parsedSystemVersion = rawSystemVersion.split(separator: ".").prefix(2).joined(separator: ".")
+    return Double(parsedSystemVersion) ?? 0.0
+}
+
+func isBridgeSupported() -> Bool {
+    return doubleSystemVersion() <= 26.0
 }

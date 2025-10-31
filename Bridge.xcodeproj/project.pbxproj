@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1595EB162EAC6EFE00B61082 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1595EB152EAC6EFE00B61082 /* MobileCoreServices.framework */; };
+		15D4DE1B2EB5384100F428B7 /* DeviceKit in Frameworks */ = {isa = PBXBuildFile; productRef = 15D4DE1A2EB5384100F428B7 /* DeviceKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +30,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1595EB162EAC6EFE00B61082 /* MobileCoreServices.framework in Frameworks */,
+				15D4DE1B2EB5384100F428B7 /* DeviceKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -80,6 +82,7 @@
 			);
 			name = Bridge;
 			packageProductDependencies = (
+				15D4DE1A2EB5384100F428B7 /* DeviceKit */,
 			);
 			productName = Bridge;
 			productReference = 15E722C52EA88DD600BD7505 /* Bridge.app */;
@@ -110,6 +113,7 @@
 			mainGroup = 15E722BC2EA88DD600BD7505;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
+				15D4DE192EB5384100F428B7 /* XCRemoteSwiftPackageReference "DeviceKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 15E722C62EA88DD600BD7505 /* Products */;
@@ -372,6 +376,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		15D4DE192EB5384100F428B7 /* XCRemoteSwiftPackageReference "DeviceKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/devicekit/DeviceKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.7.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		15D4DE1A2EB5384100F428B7 /* DeviceKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 15D4DE192EB5384100F428B7 /* XCRemoteSwiftPackageReference "DeviceKit" */;
+			productName = DeviceKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 15E722BD2EA88DD600BD7505 /* Project object */;
 }

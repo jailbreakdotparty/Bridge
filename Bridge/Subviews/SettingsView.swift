@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import DeviceKit
 
 struct SettingsView: View {
     @AppStorage("mainPartitionAppList") var mainPartitionAppList: [String] = []
@@ -78,6 +79,28 @@ struct SettingsView: View {
                         }
                     }
                     .listRowInsets(EdgeInsets(top: 18, leading: 18, bottom: 18, trailing: 18))
+                }
+                Section(header: HStack {
+                    Image(systemName: "info.circle")
+                        .frame(width: 22, height: 22)
+                    Text("Device Information")
+                }) {
+                    VStack(alignment: .leading, spacing: 6) {
+                        HStack(spacing: 12) {
+                            Image(systemName: isBridgeSupported() ? "checkmark.circle.fill" : "exclamationmark.triangle.fill")
+                                .imageScale(.large)
+                                .foregroundStyle(isBridgeSupported() ? .green : .yellow)
+                            VStack(alignment: .leading) {
+                                Text(isBridgeSupported() ? "Supported" : "Limited")
+                                    .font(.system(.headline, weight: .medium))
+                                Text("\(device) • \(device.isPad ? "iPadOS" : "iOS") \(UIDevice.current.systemVersion)")
+                                    .font(.system(.subheadline))
+                                    .opacity(0.8)
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                        Text(isBridgeSupported() ? "Your device supports Bridge fully, and can read applications in the necessary directories." : "Your device has limited support for Bridge, as you are running iOS 26.1 or later. You can no longer read applications in /Applications with the shortcuts application.")
+                    }
                 }
                 Section(header: HStack {
                     Image(systemName: "hammer")

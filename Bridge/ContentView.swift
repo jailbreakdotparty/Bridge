@@ -21,7 +21,9 @@ struct ContentView: View {
             ScrollView {
                 VStack(alignment: .leading) {
                     ApplicationsList(appList: $favoritesAppList, label: "Favorited", icon: "star", isFavoritesList: true)
-                    ApplicationsList(appList: $mainPartitionAppList, label: "/Applications", icon: "square.grid.2x2")
+                    if isBridgeSupported() {
+                        ApplicationsList(appList: $mainPartitionAppList, label: "/Applications", icon: "square.grid.2x2")
+                    }
                     ApplicationsList(appList: $secondaryPartitionAppList, label: "/System/Library/CoreServices", icon: "externaldrive")
                 }
                 .frame(alignment: .leading)

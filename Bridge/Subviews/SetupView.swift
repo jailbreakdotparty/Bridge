@@ -27,6 +27,12 @@ struct SetupView: View {
                         .opacity(0.8)
                         .frame(maxWidth: .infinity)
                         .padding(.top)
+                    if !isBridgeSupported() {
+                        Text("**Warning:** Your device has limited support for Bridge, as you are running iOS 26.1 or later. You can no longer read applications in /Applications with the shortcuts application.")
+                            .font(.system(.subheadline))
+                            .multilineTextAlignment(.center)
+                            .frame(maxWidth: .infinity)
+                    }
                 }
             }
             .frame(maxHeight: .infinity)
@@ -37,7 +43,7 @@ struct SetupView: View {
                         Alertinator.shared.alert(title: "Warning!", body: "Make sure that you have Bridge's helper installed. If you have not installed it yet, click \"Download Shortcut.\"", showCancel: false, showContinue: true, continueAction: {
                             openURL(URL(string: "shortcuts://run-shortcut?name=Bridge")!)
                         }, actionLabel: "Download Shortcut", action: {
-                            openURL(URL(string: "https://www.icloud.com/shortcuts/b7897a9691f84615bbef1ff762b6c5ea")!)
+                            openURL(URL(string: "https://jailbreak.party/bridge-helper")!)
                         })
                     }) {
                         HStack {
