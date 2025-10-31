@@ -1,6 +1,6 @@
 # Bridge
 ### An *internal* app opener & extractor for iOS/iPadOS 16.0 - 26.0.1*
-[Latest Release]() • [Support Server](https://jailbreak.party/discord) • [Website](https://jailbreak.party)
+[Latest Release](https://github.com/jailbreakdotparty/Bridge/releases/latest) • [Support Server](https://jailbreak.party/discord) • [Website](https://jailbreak.party)
 
 *While Bridge is still technically supported on iOS 26.1 and later, the amount of applications that you can read are severely limited, and almost all of the fun/useful applications aren't even readable. 
 
