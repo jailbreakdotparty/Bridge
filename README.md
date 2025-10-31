@@ -18,7 +18,7 @@
 - Favorite Applications: You can favorite applications you want to get to quickly. They'll show up in the "Favorites" dropdown.
 
 ## Sounds great. How do I set it up?
-1. Install the [Bridge Helper Shortcut](https://www.icloud.com/shortcuts/b7897a9691f84615bbef1ff762b6c5ea) onto your iPhone/iPad.
+1. Install the [Bridge Helper Shortcut](https://jailbreak.party/bridge-helper) onto your iPhone/iPad.
 2. Sideload Bridge using your preferred method.
 3. Open Bridge, and click "Begin Setup."
 4. This will redirect you to the Shortcuts app. Wait patiently for your applist to be generated. This should take less than 30 seconds.
