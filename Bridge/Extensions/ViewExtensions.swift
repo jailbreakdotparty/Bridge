@@ -58,18 +58,20 @@ struct DefaultDropdown: View {
     @Binding var isExpanded: Bool
     
     var body: some View {
-        HStack(spacing: 6) {
-            Image(systemName: icon)
-                .frame(width: 24, alignment: .center)
-            Text(label)
-            Spacer()
+        HStack {
             Button(action: {
                 withAnimation(.easeInOut(duration: 0.3)) {
                     isExpanded.toggle()
                 }
             }) {
-                Image(systemName: isExpanded ? "chevron.down" : "chevron.right")
-                    .frame(width: 24, alignment: .center)
+                HStack(spacing: 6) {
+                    Image(systemName: icon)
+                        .frame(width: 24, alignment: .center)
+                    Text(label)
+                    Spacer()
+                    Image(systemName: isExpanded ? "chevron.down" : "chevron.right")
+                        .frame(width: 24, height: 24, alignment: .center)
+                }
             }
             .buttonStyle(.plain)
         }
@@ -97,6 +99,23 @@ struct ListItemStyle: ViewModifier {
                 .padding()
                 .background(.accent.opacity(0.2))
                 .clipShape(.rect(cornerRadius: 14))
+        }
+    }
+}
+
+struct ToolbarItemBackground: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        if #available(iOS 26.0, *) {
+            configuration.label
+                .frame(width: 28, height: 28)
+        } else {
+            configuration.label
+                .frame(width: 28, height: 28)
+                .padding(6)
+                .background(Color(.secondarySystemBackground))
+                .clipShape(.circle)
+                .fontWeight(.medium)
+                .buttonStyle(.plain)
         }
     }
 }
@@ -202,10 +221,10 @@ struct ApplicationsList: View {
                                     HStack {
                                         Image(systemName: "app")
                                         Text(item)
-                                            .multilineTextAlignment(.leading)
+                                            .lineLimit(1)
                                     }
+                                    .modifier(ListItemStyle())
                                 }
-                                .modifier(ListItemStyle())
                             }
                         }
                     }
@@ -214,4 +233,3 @@ struct ApplicationsList: View {
         }
     }
 }
-

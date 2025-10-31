@@ -24,9 +24,14 @@ public class Alertinator {
         }
     }
     
-    func alert(title: String, body: String, showCancel: Bool = true, actionLabel: String = "OK", action: @escaping () -> Void) {
+    func alert(title: String, body: String, showCancel: Bool = true, showContinue: Bool = false, continueLabel: String = "Continue", continueAction: @escaping () -> Void = {}, actionLabel: String = "OK", action: @escaping () -> Void) {
         Task { @MainActor in
             alertController = UIAlertController(title: title, message: body, preferredStyle: .alert)
+            if showContinue {
+                alertController?.addAction(.init(title: continueLabel, style: .default) { _ in
+                    continueAction()
+                })
+            }
             alertController?.addAction(.init(title: actionLabel, style: .default) { _ in
                 action()
             })

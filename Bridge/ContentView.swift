@@ -35,6 +35,7 @@ struct ContentView: View {
                     }) {
                         Image(systemName: "gearshape")
                     }
+                    .buttonStyle(ToolbarItemBackground())
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button(action: {
@@ -46,6 +47,7 @@ struct ContentView: View {
                             Image(systemName: "arrow.up.forward.app")
                         }
                     }
+                    .buttonStyle(ToolbarItemBackground())
                 }
             }
         }

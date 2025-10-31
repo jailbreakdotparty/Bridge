@@ -33,6 +33,20 @@ struct SetupView: View {
             .safeAreaInset(edge: .bottom) {
                 VStack {
                     Button(action: {
+                        // i absoutely hate this so much
+                        Alertinator.shared.alert(title: "Warning!", body: "Make sure that you have Bridge's helper installed. If you have not installed it yet, click \"Download Shortcut.\"", showCancel: false, showContinue: true, continueAction: {
+                            openURL(URL(string: "shortcuts://run-shortcut?name=Bridge")!)
+                        }, actionLabel: "Download Shortcut", action: {
+                            openURL(URL(string: "https://www.icloud.com/shortcuts/b7897a9691f84615bbef1ff762b6c5ea")!)
+                        })
+                    }) {
+                        HStack {
+                            Image(systemName: "square.2.stack.3d")
+                            Text("Begin Setup")
+                        }
+                    }
+                    .buttonStyle(GlassyButton(useFullWidth: true))
+                    Button(action: {
                         Haptic.shared.play(.soft)
                         let clipboardContents = weOnADebugBuild ? "FTMInternal?Applications\nOtherApp?Applications\nSpringBoard?CoreServices" : UIPasteboard.general.string ?? ""
                         if clipboardContents.isEmpty || !clipboardContents.contains("CoreServices") {
@@ -59,9 +73,9 @@ struct SetupView: View {
                             Text("Import Applist")
                         }
                     }
-                    .buttonStyle(GlassyButton(useFullWidth: true))
+                    .buttonStyle(GlassyButton(color: .green, useFullWidth: true))
                 }
-                .padding(.bottom, 50)
+                .padding(.bottom, 30)
             }
             .padding(.horizontal, 15)
         }
