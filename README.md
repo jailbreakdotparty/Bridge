@@ -1,5 +1,5 @@
 # Bridge
-### An *internal* app opener & extractor for iOS/iPadOS 17+.
+### An *internal* app opener & extractor for iOS/iPadOS 16+.
 [Latest Release]() • [Support Server](https://jailbreak.party/discord) • [Website](https://jailbreak.party)
 
 > [!WARNING]
