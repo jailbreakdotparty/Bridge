@@ -11,26 +11,28 @@ import DeviceKit
 struct SettingsView: View {
     @AppStorage("mainPartitionAppList") var mainPartitionAppList: [String] = []
     @AppStorage("secondaryPartitionAppList") var secondaryPartitionAppList: [String] = []
+    @AppStorage("favoritesAppList") var favoritesAppList: [String] = []
     @Environment(\.openURL) var openURL
     @Environment(\.dismiss) var dismiss
     @AppStorage("openWithShortcuts") var openWithShortcuts: Bool = false
+    @AppStorage("enableFavorites") var enableFavorites: Bool = true
     
     var body: some View {
         NavigationStack {
             List {
                 Section(header: HStack {
                     Image(systemName: "info.circle")
-                        .frame(width: 22, height: 22)
+                        .frame(width: 18, height: 22)
                     Text("About")
                 }) {
-                    VStack(alignment: .leading, spacing: 12) {
-                        HStack(spacing: 14) {
+                    VStack(alignment: .leading, spacing: 8) {
+                        HStack(spacing: 12) {
                             Image("Bridge")
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: 65, height: 65)
                                 .background(.black)
-                                .clipShape(.rect(cornerRadius: 14))
+                                .clipShape(.rect(cornerRadius: 18))
                             VStack(alignment: .leading) {
                                 Text("Bridge")
                                     .font(.system(.title3, weight: .semibold))
@@ -78,15 +80,15 @@ struct SettingsView: View {
                             .buttonStyle(GlassyButton(color: .gitHub, useFullWidth: true))
                         }
                     }
-                    .listRowInsets(EdgeInsets(top: 18, leading: 18, bottom: 18, trailing: 18))
+                    .listRowInsets(EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16))
                 }
                 Section(header: HStack {
-                    Image(systemName: "info.circle")
-                        .frame(width: 22, height: 22)
+                    Image(systemName: device.isPad ? "ipad" : "iphone")
+                        .frame(width: 18, height: 22)
                     Text("Device Information")
                 }) {
                     VStack(alignment: .leading, spacing: 6) {
-                        HStack(spacing: 12) {
+                        HStack(spacing: 10) {
                             Image(systemName: isBridgeSupported() ? "checkmark.circle.fill" : "exclamationmark.triangle.fill")
                                 .imageScale(.large)
                                 .foregroundStyle(isBridgeSupported() ? .green : .yellow)
@@ -99,20 +101,40 @@ struct SettingsView: View {
                             }
                             .frame(maxWidth: .infinity, alignment: .leading)
                         }
-                        Text(isBridgeSupported() ? "Your device supports Bridge fully, and can read applications in the necessary directories." : "Your device has limited support for Bridge, as you are running iOS 26.1 or later. You can no longer read applications in /Applications with the shortcuts application.")
+                        Text(isBridgeSupported() ? "Your device supports Bridge fully, and can read applications in the necessary directories." : "Your device supports Bridge, however, you cannot fetch applications from your device. This may cause some applications that aren't actually installed on your device to appear.")
                     }
+                    .listRowInsets(EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16))
                 }
                 Section(header: HStack {
-                    Image(systemName: "hammer")
-                        .frame(width: 22, height: 22)
+                    Image(systemName: "gearshape")
+                        .frame(width: 18, height: 22)
+                    Text("Settings")
+                }) {
+                    Toggle("Enable Favorites", isOn: $enableFavorites)
+                    Toggle("Open App with Shortcuts", isOn: $openWithShortcuts)
+                }
+                Section(header: HStack {
+                    Image(systemName: "wrench.and.screwdriver")
+                        .frame(width: 18, height: 22)
                     Text("Actions")
                 }) {
-                    VStack(spacing: 12) {
-                        Toggle("Open App with Shortcuts", isOn: $openWithShortcuts)
+                    VStack {
+                        Button(action: {
+                            Haptic.shared.play(.soft)
+                            favoritesAppList.removeAll()
+                        }) {
+                            HStack {
+                                Image(systemName: "star.slash")
+                                Text("Remove Favorties")
+                            }
+                        }
+                        .buttonStyle(GlassyButton(color: .accent, useFullWidth: true))
                         Button(action: {
                             Haptic.shared.play(.soft)
                             mainPartitionAppList.removeAll()
                             secondaryPartitionAppList.removeAll()
+                            openWithShortcuts = false
+                            enableFavorites = true
                             exitinator()
                         }) {
                             HStack {
@@ -122,7 +144,7 @@ struct SettingsView: View {
                         }
                         .buttonStyle(GlassyButton(color: .red, useFullWidth: true))
                     }
-                    .listRowInsets(EdgeInsets(top: 18, leading: 18, bottom: 18, trailing: 18))
+                    .listRowInsets(EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16))
                 }
             }
             .navigationTitle("Settings")

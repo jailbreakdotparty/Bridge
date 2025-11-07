@@ -21,68 +21,73 @@ struct SetupView: View {
                     WelcomeSheetRow(header: "Open Internal Applications", text: "Open applications that are not usually available to the user.", icon: "ant")
                     WelcomeSheetRow(header: "Export Bundles", text: "Not only can you open internal applications, but you can export their bundles too.", icon: "archivebox")
                     WelcomeSheetRow(header: "Various Intergrations", text: "This tool uses Private APIs and the Shortcuts application.", icon: "link")
+                    Spacer()
                     Text("**Disclaimer:** This tool can NOT read or export applications that are user-installed.")
                         .font(.system(.subheadline))
                         .multilineTextAlignment(.center)
                         .opacity(0.8)
                         .frame(maxWidth: .infinity)
-                        .padding(.top)
-                    if !isBridgeSupported() {
-                        Text("**Warning:** Your device has limited support for Bridge, as you are running iOS 26.1 or later. You can no longer read applications in /Applications with the shortcuts application.")
-                            .font(.system(.subheadline))
-                            .multilineTextAlignment(.center)
-                            .frame(maxWidth: .infinity)
+                }
+                Spacer()
+                VStack {
+                    Button(action: {
+                        // i absoutely hate this so much
+                        if isBridgeSupported() {
+                            Alertinator.shared.alert(title: "Warning!", body: "Make sure that you have Bridge's helper installed. If you have not installed it yet, click \"Download Shortcut.\"", showCancel: false, showContinue: true, continueAction: {
+                                openURL(URL(string: "shortcuts://run-shortcut?name=Bridge")!)
+                            }, actionLabel: "Download Shortcut", action: {
+                                openURL(URL(string: "https://jailbreak.party/bridge-helper")!)
+                            })
+                        } else {
+                            let clipboardContents = staticApplist
+                            processAppList(clipboardContents: clipboardContents) { _ in
+                                dismiss()
+                            }
+                        }
+                    }) {
+                        HStack {
+                            if isBridgeSupported() {
+                                Image(systemName: "square.2.stack.3d")
+                                Text("Begin Setup")
+                            } else {
+                                Image(systemName: "arrow.forward")
+                                Text("Continue")
+                            }
+                        }
+                    }
+                    .buttonStyle(GlassyButton(capsuleButton: true, useFullWidth: true))
+                    if isBridgeSupported() {
+                        Button(action: {
+                            Haptic.shared.play(.soft)
+                            let clipboardContents = weOnADebugBuild ? debugApplist : UIPasteboard.general.string ?? ""
+                            processAppList(clipboardContents: clipboardContents) { applistProcessed in
+                                if applistProcessed {
+                                    dismiss()
+                                }
+                            }
+                        }) {
+                            HStack {
+                                Image(systemName: "plus")
+                                Text("Import Applist")
+                            }
+                        }
+                        .buttonStyle(GlassyButton(color: .green, capsuleButton: true, useFullWidth: true))
+                    }
+                    if isBridgeSupported() {
+                        Button("Skip & Use Static Applist", action: {
+                            Alertinator.shared.alert(title: "Are you sure you want to do this?", body: "This will import an applist that was not parsed from your personal device. This may cause applications that aren't actually installed to show up.", showCancel: true, action: {
+                                let clipboardContents = staticApplist
+                                processAppList(clipboardContents: clipboardContents) { _ in
+                                    dismiss()
+                                }
+                            })
+                        })
+                        .font(.system(.subheadline))
+                        .padding(6)
                     }
                 }
             }
             .frame(maxHeight: .infinity)
-            .safeAreaInset(edge: .bottom) {
-                VStack {
-                    Button(action: {
-                        // i absoutely hate this so much
-                        Alertinator.shared.alert(title: "Warning!", body: "Make sure that you have Bridge's helper installed. If you have not installed it yet, click \"Download Shortcut.\"", showCancel: false, showContinue: true, continueAction: {
-                            openURL(URL(string: "shortcuts://run-shortcut?name=Bridge")!)
-                        }, actionLabel: "Download Shortcut", action: {
-                            openURL(URL(string: "https://jailbreak.party/bridge-helper")!)
-                        })
-                    }) {
-                        HStack {
-                            Image(systemName: "square.2.stack.3d")
-                            Text("Begin Setup")
-                        }
-                    }
-                    .buttonStyle(GlassyButton(useFullWidth: true))
-                    Button(action: {
-                        Haptic.shared.play(.soft)
-                        let clipboardContents = weOnADebugBuild ? "FTMInternal?Applications\nOtherApp?Applications\nSpringBoard?CoreServices" : UIPasteboard.general.string ?? ""
-                        if clipboardContents.isEmpty || !clipboardContents.contains("CoreServices") {
-                            Alertinator.shared.alert(title: "Error!", body: "An applist was not generated properly, or no applist was generated at all.", actionLabel: "Re-Run Shortcut", action: {
-                                openURL(URL(string: "shortcuts://run-shortcut?name=Bridge")!)
-                            })
-                        } else {
-                            let rawAppList = clipboardContents.components(separatedBy: "\n")
-                            for item in rawAppList {
-                                let parts = item.components(separatedBy: "?")
-                                let appName = parts.first ?? ""
-                                let partitionType = parts.last ?? ""
-                                if partitionType == "CoreServices" {
-                                    secondaryPartitionAppList.append(appName)
-                                } else {
-                                    mainPartitionAppList.append(appName)
-                                }
-                            }
-                            dismiss()
-                        }
-                    }) {
-                        HStack {
-                            Image(systemName: "plus")
-                            Text("Import Applist")
-                        }
-                    }
-                    .buttonStyle(GlassyButton(color: .green, useFullWidth: true))
-                }
-                .padding(.bottom, 30)
-            }
             .padding(.horizontal, 15)
         }
     }

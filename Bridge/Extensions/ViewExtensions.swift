@@ -12,18 +12,29 @@ import UIKit
 struct GlassyButton: ButtonStyle {
     var color: Color = .accent
     var isDisabled: Bool = false
-    var useLiquidGlass: Bool = true
+    var capsuleButton: Bool = false
     var useFullWidth: Bool = false
     
     func makeBody(configuration: Configuration) -> some View {
         if #available(iOS 26.0, *) {
-            configuration.label
-                .foregroundStyle(color)
-                .padding()
-                .frame(maxWidth: useFullWidth ? .infinity : nil)
-                .background(color.opacity(0.2))
-                .glassEffect(.regular.interactive(), in: .capsule)
-                .clipShape(.rect(cornerRadius: 50))
+            // apple i fucking hate you so much
+            if capsuleButton {
+                configuration.label
+                    .foregroundStyle(color)
+                    .padding()
+                    .frame(maxWidth: useFullWidth ? .infinity : nil)
+                    .background(color.opacity(0.2))
+                    .glassEffect(.regular.interactive(), in: .capsule)
+                    .clipShape(.rect(cornerRadius: capsuleButton ? 50 : 20))
+            } else {
+                configuration.label
+                    .foregroundStyle(color)
+                    .padding()
+                    .frame(maxWidth: useFullWidth ? .infinity : nil)
+                    .background(color.opacity(0.2))
+                    .glassEffect(.regular.interactive(), in: .rect(cornerRadius: 18))
+                    .clipShape(.rect(cornerRadius: capsuleButton ? 50 : 18))
+            }
         } else {
             configuration.label
                 .foregroundStyle(color)
@@ -56,6 +67,7 @@ struct DefaultDropdown: View {
     let label: String
     let icon: String
     @Binding var isExpanded: Bool
+    var itemCount: Int
     
     var body: some View {
         HStack {
@@ -69,6 +81,12 @@ struct DefaultDropdown: View {
                         .frame(width: 24, alignment: .center)
                     Text(label)
                     Spacer()
+                    Text("\(itemCount)")
+                        .frame(minWidth: 14)
+                        .frame(height: 14)
+                        .padding(6)
+                        .background(Color(.secondarySystemBackground))
+                        .clipShape(.capsule)
                     Image(systemName: isExpanded ? "chevron.down" : "chevron.right")
                         .frame(width: 24, height: 24, alignment: .center)
                 }
@@ -110,12 +128,7 @@ struct ToolbarItemBackground: ButtonStyle {
                 .frame(width: 28, height: 28)
         } else {
             configuration.label
-                .frame(width: 28, height: 28)
-                .padding(6)
-                .background(Color(.secondarySystemBackground))
-                .clipShape(.circle)
-                .fontWeight(.medium)
-                .buttonStyle(.plain)
+                .foregroundStyle(.accent)
         }
     }
 }
@@ -153,8 +166,8 @@ struct WelcomeSheetRow: View {
     var body: some View {
         HStack(spacing: 12) {
             Image(systemName: icon)
-                .frame(width: 40, height: 40)
                 .imageScale(.large)
+                .frame(width: 40, height: 40)
                 .foregroundStyle(.accent)
             VStack(alignment: .leading) {
                 Text(header)
@@ -180,7 +193,8 @@ struct ApplicationsList: View {
     
     var body: some View {
         Section(header: HStack {
-            DefaultDropdown(label: label, icon: icon, isExpanded: $isExpanded)
+            let appCount = appList.count
+            DefaultDropdown(label: label, icon: icon, isExpanded: $isExpanded, itemCount: appCount)
         }) {
             ZStack {
                 if isExpanded {
@@ -230,6 +244,12 @@ struct ApplicationsList: View {
                     }
                 }
             }
+        }
+        .onChange(of: appList) { newValue in
+            isExpanded = !newValue.isEmpty
+        }
+        .task {
+            isExpanded = !appList.isEmpty
         }
     }
 }

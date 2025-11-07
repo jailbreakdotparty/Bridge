@@ -15,15 +15,16 @@ struct ContentView: View {
     @AppStorage("showSetupSheet") var showSetupSheet: Bool = false
     @State private var showSettingsView: Bool = false
     @AppStorage("openWithShortcuts") var openWithShortcuts: Bool = false
+    @AppStorage("enableFavorites") var enableFavorites: Bool = true
     
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading) {
-                    ApplicationsList(appList: $favoritesAppList, label: "Favorited", icon: "star", isFavoritesList: true)
-                    if isBridgeSupported() {
-                        ApplicationsList(appList: $mainPartitionAppList, label: "/Applications", icon: "square.grid.2x2")
+                    if enableFavorites {
+                        ApplicationsList(appList: $favoritesAppList, label: "Favorited", icon: "star", isFavoritesList: true)
                     }
+                    ApplicationsList(appList: $mainPartitionAppList, label: "/Applications", icon: "square.grid.2x2")
                     ApplicationsList(appList: $secondaryPartitionAppList, label: "/System/Library/CoreServices", icon: "externaldrive")
                 }
                 .frame(alignment: .leading)
