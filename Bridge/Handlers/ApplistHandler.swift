@@ -24,12 +24,29 @@ func processAppList(clipboardContents: String, completion: @escaping (_ applistP
             let appName = parts.first ?? ""
             let partitionType = parts.last ?? ""
             if partitionType == "CoreServices" {
-                secondaryPartitionAppList.append(appName)
+                secondaryPartitionAppList.append(item)
             } else {
-                mainPartitionAppList.append(appName)
+                mainPartitionAppList.append(item)
             }
         }
         completion(true)
+    }
+}
+
+func displayAppName(item: String) -> String {
+    let parts = item.components(separatedBy: "?")
+    let appName = parts.first ?? ""
+    return appName
+}
+
+func isApplicationInMainPartition(item: String) -> Bool {
+    let parts = item.components(separatedBy: "?")
+    let appName = parts.last ?? ""
+    
+    if appName == "Applications" {
+        return true
+    } else {
+        return false
     }
 }
 

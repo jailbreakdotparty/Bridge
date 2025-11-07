@@ -204,14 +204,16 @@ struct ApplicationsList: View {
                             VStack {
                                 Menu {
                                     Button(action: {
-                                        handleApplication(handleType: "open", applicationName: item)
+                                        handleApplication(handleType: "open", application: item)
                                     }) {
                                         Label("Open App", systemImage: "arrow.up.forward")
                                     }
-                                    Button(action: {
-                                        handleApplication(handleType: "export", applicationName: item)
-                                    }) {
-                                        Label("Export Bundle", systemImage: "archivebox")
+                                    if isBridgeSupported() || !isBridgeSupported() && !isApplicationInMainPartition(item: item) {
+                                        Button(action: {
+                                            handleApplication(handleType: "export", application: item)
+                                        }) {
+                                            Label("Export Bundle", systemImage: "archivebox")
+                                        }
                                     }
                                     Divider()
                                     if isFavoritesList {
@@ -234,7 +236,7 @@ struct ApplicationsList: View {
                                 } label: {
                                     HStack {
                                         Image(systemName: "app")
-                                        Text(item)
+                                        Text(displayAppName(item: item))
                                             .lineLimit(1)
                                     }
                                     .modifier(ListItemStyle())
