@@ -1,11 +1,11 @@
 # Bridge
-### An *internal* app opener & extractor for iOS/iPadOS 16.0 - 26.0.1*
-[Latest Release](https://github.com/jailbreakdotparty/Bridge/releases/latest) • [Support Server](https://jailbreak.party/discord) • [Website](https://jailbreak.party)
+### An *internal* app opener & extractor for jailed iDevices running iOS 16.0 - 26.0.1. (limited support for 26.1+)
+[Latest Release](https://github.com/jailbreakdotparty/Bridge/releases/latest) • [Support Server](https://jailbreak.party/discord) • [Website](https://jailbreak.party) • [Documented Applications (coming soon)]()
 
-*While Bridge is still technically supported on iOS 26.1 and later, the amount of applications that you can read are severely limited, and almost all of the fun/useful applications aren't even readable. 
+> **For people with limited support:** You'll be able to open most of the applications listed inside of the "Documented Applications" link, however, exporting bundles will not be possible for most. Also, you will not be using an applist that's generated from your own device, so any new applications added after 26.0.1 will not appear, and some applications listed may not open properly.
 
 > [!WARNING]
-> This tool does **not** show any applications that were installed by the user. If you want functionality like that, please consider using [Antrag](https://github.com/khcrysalis/Antrag) (note that this cannot extract user data from applications).
+> This tool does **not** show any applications that were installed by the user. If you are looking to see both user-installed applications and internal ones, or if you are on iOS 26.1+ and want to get around the limitations listed, consider using [Antrag](https://github.com/khcrysalis/Antrag).
 
 ### What is an internal application in this situation?
 - These are applications such as view services and UI testing applications, which are not normally readable or openable to the user. They don't appear anywhere in SpringBoard or the Settings app, but some of these applications could give your device more functionality or are just fun to play around with. 
@@ -22,7 +22,13 @@
 ## Sounds great. How do I set it up?
 1. Install the [Bridge Helper Shortcut](https://jailbreak.party/bridge-helper) onto your iPhone/iPad.
 2. Sideload Bridge using your preferred method.
-3. Open Bridge, and click "Begin Setup."
-4. This will redirect you to the Shortcuts app. Wait patiently for your applist to be generated. This should take less than 30 seconds.
-5. Once completed, re-open Bridge, and click "Import Applist."
-6. Profit 🔥
+
+### If you are on iOS 16.0 - iOS 26.0.1 and want to fetch applications from your own device (recommended):
+4. Open Bridge, and click "Begin Setup."
+5. This will redirect you to the Shortcuts app. Wait patiently for your applist to be generated. This should take less than 30 seconds.
+6. Once completed, re-open Bridge, and click "Import Applist."
+7. Profit 🔥
+
+### If you are on iOS 26.1+ or do not want to fetch applications from your own device:
+4. Click either "Skip & Use Static Applist" or "Continue."
+5. Done 🔥
