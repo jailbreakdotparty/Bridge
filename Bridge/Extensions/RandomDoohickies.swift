@@ -15,17 +15,13 @@ class Haptic: ObservableObject {
     
     func play(_ feedbackStyle: UIImpactFeedbackGenerator.FeedbackStyle) {
         Task { @MainActor in
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-                UIImpactFeedbackGenerator(style: feedbackStyle).impactOccurred()
-            }
+            UIImpactFeedbackGenerator(style: feedbackStyle).impactOccurred()
         }
     }
     
     func notify(_ feedbackType: UINotificationFeedbackGenerator.FeedbackType) {
         Task { @MainActor in
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-                UINotificationFeedbackGenerator().notificationOccurred(feedbackType)
-            }
+            UINotificationFeedbackGenerator().notificationOccurred(feedbackType)
         }
     }
 }

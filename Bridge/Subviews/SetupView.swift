@@ -39,9 +39,12 @@ struct SetupView: View {
                                 openURL(URL(string: "https://jailbreak.party/bridge-helper")!)
                             })
                         } else {
-                            let clipboardContents = staticApplist
-                            processAppList(clipboardContents: clipboardContents) { _ in
-                                dismiss()
+                            Haptic.shared.play(.soft)
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                                let clipboardContents = staticApplist()
+                                processAppList(clipboardContents: clipboardContents) { _ in
+                                    dismiss()
+                                }
                             }
                         }
                     }) {
@@ -59,10 +62,12 @@ struct SetupView: View {
                     if isBridgeSupported() {
                         Button(action: {
                             Haptic.shared.play(.soft)
-                            let clipboardContents = weOnADebugBuild ? debugApplist : UIPasteboard.general.string ?? ""
-                            processAppList(clipboardContents: clipboardContents) { applistProcessed in
-                                if applistProcessed {
-                                    dismiss()
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                                let clipboardContents = weOnADebugBuild ? debugApplist : UIPasteboard.general.string ?? ""
+                                processAppList(clipboardContents: staticApplist()) { applistProcessed in
+                                    if applistProcessed {
+                                        dismiss()
+                                    }
                                 }
                             }
                         }) {
@@ -76,8 +81,7 @@ struct SetupView: View {
                     if isBridgeSupported() {
                         Button("Skip & Use Static Applist", action: {
                             Alertinator.shared.alert(title: "Are you sure you want to do this?", body: "This will import an applist that was not parsed from your personal device. This may cause applications that aren't actually installed to show up.", showCancel: true, action: {
-                                let clipboardContents = staticApplist
-                                processAppList(clipboardContents: clipboardContents) { _ in
+                                processAppList(clipboardContents: staticApplist()) { _ in
                                     dismiss()
                                 }
                             })

@@ -204,13 +204,19 @@ struct ApplicationsList: View {
                             VStack {
                                 Menu {
                                     Button(action: {
-                                        handleApplication(handleType: "open", application: item)
+                                        Haptic.shared.play(.soft)
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                                            handleApplication(handleType: "open", application: item)
+                                        }
                                     }) {
                                         Label("Open App", systemImage: "arrow.up.forward")
                                     }
                                     if isBridgeSupported() || !isBridgeSupported() && !isApplicationInMainPartition(item: item) {
                                         Button(action: {
-                                            handleApplication(handleType: "export", application: item)
+                                            Haptic.shared.play(.soft)
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                                                handleApplication(handleType: "export", application: item)
+                                            }
                                         }) {
                                             Label("Export Bundle", systemImage: "archivebox")
                                         }
@@ -218,12 +224,14 @@ struct ApplicationsList: View {
                                     Divider()
                                     if isFavoritesList {
                                         Button(action: {
+                                            Haptic.shared.play(.soft)
                                             favoritesAppList.removeAll { $0 == item }
                                         }) {
                                             Label("Remove Favorite", systemImage: "star.slash")
                                         }
                                     } else {
                                         Button(action: {
+                                            Haptic.shared.play(.soft)
                                             if !favoritesAppList.contains(item) {
                                                 favoritesAppList.append(item)
                                             } else {

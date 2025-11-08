@@ -42,7 +42,9 @@ struct SettingsView: View {
                         VStack {
                             Button(action: {
                                 Haptic.shared.play(.soft)
-                                openURL(URL(string: "https://jailbreak.party")!)
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                                    openURL(URL(string: "https://jailbreak.party")!)
+                                }
                             }) {
                                 HStack {
                                     Image(systemName: "globe")
@@ -54,7 +56,9 @@ struct SettingsView: View {
                         HStack {
                             Button(action: {
                                 Haptic.shared.play(.soft)
-                                openURL(URL(string: "https://jailbreak.party/discord")!)
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                                    openURL(URL(string: "https://jailbreak.party/discord")!)
+                                }
                             }) {
                                 HStack {
                                     Image("discord")
@@ -67,7 +71,9 @@ struct SettingsView: View {
                             .buttonStyle(GlassyButton(color: .discord, useFullWidth: true))
                             Button(action: {
                                 Haptic.shared.play(.soft)
-                                openURL(URL(string: "https://jailbreak.party/discord")!)
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                                    openURL(URL(string: "https://jailbreak.party/discord")!)
+                                }
                             }) {
                                 HStack {
                                     Image("github")
@@ -130,12 +136,17 @@ struct SettingsView: View {
                         }
                         .buttonStyle(GlassyButton(color: .accent, useFullWidth: true))
                         Button(action: {
-                            Haptic.shared.play(.soft)
-                            mainPartitionAppList.removeAll()
-                            secondaryPartitionAppList.removeAll()
-                            openWithShortcuts = false
-                            enableFavorites = true
-                            exitinator()
+                            Alertinator.shared.alert(title: "Are you sure you want to do this?", body: "This will reset all settings, favorites, and your currently imported applist.",showCancel: true, actionLabel: "Reset Application", action: {
+                                Haptic.shared.play(.soft)
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                                    mainPartitionAppList.removeAll()
+                                    secondaryPartitionAppList.removeAll()
+                                    favoritesAppList.removeAll()
+                                    openWithShortcuts = false
+                                    enableFavorites = true
+                                    exitinator()
+                                }
+                            })
                         }) {
                             HStack {
                                 Image(systemName: "xmark")
