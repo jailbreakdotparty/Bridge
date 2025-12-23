@@ -12,15 +12,18 @@ struct ContentView: View {
     @AppStorage("mainPartitionAppList") var mainPartitionAppList: [String] = []
     @AppStorage("secondaryPartitionAppList") var secondaryPartitionAppList: [String] = []
     @AppStorage("favoritesAppList") var favoritesAppList: [String] = []
+    @AppStorage("customAppList") var customAppList: [String: String] = [:]
     @AppStorage("showSetupSheet") var showSetupSheet: Bool = false
     @State private var showSettingsView: Bool = false
     @AppStorage("openWithShortcuts") var openWithShortcuts: Bool = false
     @AppStorage("enableFavorites") var enableFavorites: Bool = true
+    @State private var showCustomAppView: Bool = false
     
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading) {
+                    CustomApplicationsList()
                     if enableFavorites {
                         ApplicationsList(appList: $favoritesAppList, label: "Favorited", icon: "star", isFavoritesList: true)
                     }
@@ -37,6 +40,14 @@ struct ContentView: View {
                         showSettingsView = true
                     }) {
                         Image(systemName: "gearshape")
+                    }
+                    .buttonStyle(ToolbarItemBackground())
+                }
+                ToolbarItem(placement: .topBarLeading) {
+                    Button(action: {
+                        showCustomAppView = true
+                    }) {
+                        Image(systemName: "plus.app")
                     }
                     .buttonStyle(ToolbarItemBackground())
                 }
@@ -66,27 +77,9 @@ struct ContentView: View {
         .sheet(isPresented: $showSettingsView) {
             SettingsView()
         }
-    }
-}
-
-// thanks skadz108
-extension Array: @retroactive RawRepresentable where Element: Codable {
-    public init?(rawValue: String) {
-        guard let data = rawValue.data(using: .utf8),
-              let result = try? JSONDecoder().decode([Element].self, from: data)
-        else {
-            return nil
+        .sheet(isPresented: $showCustomAppView) {
+            CustomAppView()
         }
-        self = result
-    }
-    
-    public var rawValue: String {
-        guard let data = try? JSONEncoder().encode(self),
-              let result = String(data: data, encoding: .utf8)
-        else {
-            return "[]"
-        }
-        return result
     }
 }
 

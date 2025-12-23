@@ -33,6 +33,9 @@ func handleApplication(handleType: String, application: String) {
         }
     } else if handleType == "export" {
         openURL(URL(string: "shortcuts://run-shortcut?name=Bridge&input=Export*\(application)")!)
+    } else if handleType == "openCustomApp" {
+        let bundleID = application
+        LSApplicationWorkspace.default().openApplication(withBundleID: bundleID)
     } else {
         Alertinator.shared.alert(title: "That was NOT supposed to happen.", body: "If you're seeing this, I probably screwed up something.")
     }

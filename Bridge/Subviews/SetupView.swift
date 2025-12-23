@@ -58,7 +58,7 @@ struct SetupView: View {
                             }
                         }
                     }
-                    .buttonStyle(GlassyButton(capsuleButton: true, useFullWidth: true))
+                    .buttonStyle(GlassyButton(useFullWidth: true, capsuleButton: true))
                     if isBridgeSupported() {
                         Button(action: {
                             Haptic.shared.play(.soft)
@@ -76,7 +76,7 @@ struct SetupView: View {
                                 Text("Import Applist")
                             }
                         }
-                        .buttonStyle(GlassyButton(color: .green, capsuleButton: true, useFullWidth: true))
+                        .buttonStyle(GlassyButton(color: .green, useFullWidth: true, capsuleButton: true))
                     }
                     if isBridgeSupported() {
                         Button("Skip & Use Static Applist", action: {

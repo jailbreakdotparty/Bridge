@@ -86,7 +86,6 @@ struct SettingsView: View {
                             .buttonStyle(GlassyButton(color: .gitHub, useFullWidth: true))
                         }
                     }
-                    .listRowInsets(EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16))
                 }
                 Section(header: HStack {
                     Image(systemName: device.isPad ? "ipad" : "iphone")
@@ -109,7 +108,6 @@ struct SettingsView: View {
                         }
                         Text(isBridgeSupported() ? "Your device supports Bridge fully, and can read applications in the necessary directories." : "Your device supports Bridge, however, you cannot fetch applications from your device. This may cause some applications that aren't actually installed on your device to appear.")
                     }
-                    .listRowInsets(EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16))
                 }
                 Section(header: HStack {
                     Image(systemName: "gearshape")
@@ -155,7 +153,6 @@ struct SettingsView: View {
                         }
                         .buttonStyle(GlassyButton(color: .red, useFullWidth: true))
                     }
-                    .listRowInsets(EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16))
                 }
             }
             .navigationTitle("Settings")

@@ -10,38 +10,85 @@ import UIKit
 
 // MARK: Buttons, Lists, Headers, and other Global Items
 struct GlassyButton: ButtonStyle {
-    var color: Color = .accent
+    var color: Color = .accentColor
+    var useFullWidth: Bool = true
     var isDisabled: Bool = false
     var capsuleButton: Bool = false
-    var useFullWidth: Bool = false
+    var cornerRadius: CGFloat = 18
+    var isInteractive: Bool = true
+    var isMaterialButton: Bool = false
     
     func makeBody(configuration: Configuration) -> some View {
+        let color: Color = isDisabled ? .gray : color
+        
         if #available(iOS 26.0, *) {
-            // apple i fucking hate you so much
-            if capsuleButton {
-                configuration.label
-                    .foregroundStyle(color)
-                    .padding()
-                    .frame(maxWidth: useFullWidth ? .infinity : nil)
-                    .background(color.opacity(0.2))
-                    .glassEffect(.regular.interactive(), in: .capsule)
-                    .clipShape(.rect(cornerRadius: capsuleButton ? 50 : 20))
-            } else {
-                configuration.label
-                    .foregroundStyle(color)
-                    .padding()
-                    .frame(maxWidth: useFullWidth ? .infinity : nil)
-                    .background(color.opacity(0.2))
-                    .glassEffect(.regular.interactive(), in: .rect(cornerRadius: 18))
-                    .clipShape(.rect(cornerRadius: capsuleButton ? 50 : 18))
-            }
-        } else {
+            let shape: AnyShape = capsuleButton ? AnyShape(.capsule) : AnyShape(.rect(cornerRadius: cornerRadius))
+            let isInteractive: Bool = isDisabled ? false : true
+            
             configuration.label
+                .buttonStyle(.plain)
+                .frame(maxWidth: useFullWidth ? .infinity : nil)
                 .foregroundStyle(color)
                 .padding()
-                .frame(maxWidth: useFullWidth ? .infinity : nil)
                 .background(color.opacity(0.2))
-                .clipShape(.rect(cornerRadius: 14))
+                .clipShape(shape)
+                .glassEffect(isInteractive ? .regular.interactive() : .regular, in: shape)
+                .allowsHitTesting(!isDisabled)
+        } else {
+            let shape: AnyShape = capsuleButton ? AnyShape(.capsule) : AnyShape(.rect(cornerRadius: 12))
+            
+            configuration.label
+                .buttonStyle(.plain)
+                .frame(maxWidth: useFullWidth ? .infinity : nil)
+                .foregroundStyle(color)
+                .padding()
+                .background(color.opacity(0.2))
+                .background {
+                    if isMaterialButton {
+                        Color.clear.background(.ultraThinMaterial)
+                    }
+                }
+                .clipShape(shape)
+                .allowsHitTesting(!isDisabled)
+        }
+    }
+}
+
+struct GlassyTextFieldStyle: TextFieldStyle {
+    var color: Color = Color(.tertiarySystemFill)
+    var isDisabled: Bool = false
+    var capsuleField: Bool = false
+    var cornerRadius: CGFloat = 18
+    var isInteractive: Bool = true
+    
+    func _body(configuration: TextField<Self._Label>) -> some View {
+        let color: Color = isDisabled ? .gray : color
+        let fontColor: Color = isDisabled ? .gray : .primary
+        
+        if #available(iOS 26.0, *) {
+            let shape: AnyShape = capsuleField ? AnyShape(.capsule) : AnyShape(.rect(cornerRadius: cornerRadius))
+            let isInteractive: Bool = isDisabled ? false : true
+            
+            configuration
+                .textFieldStyle(.plain)
+                .frame(maxWidth: .infinity)
+                .foregroundStyle(fontColor)
+                .padding()
+                .background(color.opacity(0.2))
+                .clipShape(shape)
+                .glassEffect(isInteractive ? .regular.interactive() : .regular, in: shape)
+                .allowsHitTesting(!isDisabled)
+        } else {
+            let shape: AnyShape = capsuleField ? AnyShape(.capsule) : AnyShape(.rect(cornerRadius: 12))
+            
+            configuration
+                .textFieldStyle(.plain)
+                .frame(maxWidth: .infinity)
+                .foregroundStyle(fontColor)
+                .padding()
+                .background(color.opacity(0.2))
+                .clipShape(shape)
+                .allowsHitTesting(!isDisabled)
         }
     }
 }
@@ -101,21 +148,23 @@ struct DefaultDropdown: View {
 }
 
 struct ListItemStyle: ViewModifier {
+    var color: Color = .accent
+    
     func body(content: Content) -> some View {
         if #available(iOS 26.0, *) {
             content
-                .foregroundStyle(.accent)
+                .foregroundStyle(color)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding()
-                .background(.accent.opacity(0.2))
+                .background(color.opacity(0.2))
                 .glassEffect(.regular.interactive(), in: .rect(cornerRadius: 20))
                 .clipShape(.rect(cornerRadius: 20))
         } else {
             content
-                .foregroundStyle(.accent)
+                .foregroundStyle(color)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding()
-                .background(.accent.opacity(0.2))
+                .background(color.opacity(0.2))
                 .clipShape(.rect(cornerRadius: 14))
         }
     }
@@ -244,6 +293,8 @@ struct ApplicationsList: View {
                                 } label: {
                                     HStack {
                                         Image(systemName: "app")
+                                            .resizable()
+                                            .frame(width: 16, height: 16)
                                         Text(displayAppName(item: item))
                                             .lineLimit(1)
                                     }
@@ -260,6 +311,66 @@ struct ApplicationsList: View {
         }
         .task {
             isExpanded = !appList.isEmpty
+        }
+    }
+}
+
+// sigh
+struct CustomApplicationsList: View {
+    @AppStorage("customAppList") var customAppList: [String: String] = [:]
+    @State var isExpanded: Bool = true
+    
+    var body: some View {
+        Section(header: HStack {
+            let appCount = customAppList.keys.count
+            DefaultDropdown(label: "Custom Applications", icon: "plus.app", isExpanded: $isExpanded, itemCount: appCount)
+        }) {
+            ZStack {
+                if isExpanded {
+                    let columns = Array(repeating: GridItem(.flexible(), spacing: 8), count: UIApplication.isPad ? 3 : 1)
+                    LazyVGrid(columns: columns, spacing: 8) {
+                        ForEach(customAppList.keys.sorted(), id: \.self) { key in
+                            if let value = customAppList[key] {
+                                Menu {
+                                    Label(value, systemImage: "plus.app")
+                                    Button(action: {
+                                        Haptic.shared.play(.soft)
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                                            handleApplication(handleType: "openCustomApp", application: value)
+                                        }
+                                    }) {
+                                        Label("Open App", systemImage: "arrow.up.forward")
+                                    }
+                                    Button(action: {
+                                        Haptic.shared.play(.soft)
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                                            customAppList.removeValue(forKey: key)
+                                            customAppList[key] = nil
+                                        }
+                                    }) {
+                                        Label("Remove App", systemImage: "xmark")
+                                    }
+                                } label: {
+                                    HStack(spacing: 12) {
+                                        Image(systemName: "plus.app")
+                                            .resizable()
+                                            .frame(width: 16, height: 16)
+                                        Text(key)
+                                            .lineLimit(1)
+                                    }
+                                    .modifier(ListItemStyle())
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .onChange(of: customAppList) { newValue in
+            isExpanded = !newValue.isEmpty
+        }
+        .task {
+            isExpanded = !customAppList.isEmpty
         }
     }
 }
