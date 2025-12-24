@@ -7,92 +7,9 @@
 
 import SwiftUI
 import UIKit
+import PartyUI
 
 // MARK: Buttons, Lists, Headers, and other Global Items
-struct GlassyButton: ButtonStyle {
-    var color: Color = .accentColor
-    var useFullWidth: Bool = true
-    var isDisabled: Bool = false
-    var capsuleButton: Bool = false
-    var cornerRadius: CGFloat = 18
-    var isInteractive: Bool = true
-    var isMaterialButton: Bool = false
-    
-    func makeBody(configuration: Configuration) -> some View {
-        let color: Color = isDisabled ? .gray : color
-        
-        if #available(iOS 26.0, *) {
-            let shape: AnyShape = capsuleButton ? AnyShape(.capsule) : AnyShape(.rect(cornerRadius: cornerRadius))
-            let isInteractive: Bool = isDisabled ? false : true
-            
-            configuration.label
-                .buttonStyle(.plain)
-                .frame(maxWidth: useFullWidth ? .infinity : nil)
-                .foregroundStyle(color)
-                .padding()
-                .background(color.opacity(0.2))
-                .clipShape(shape)
-                .glassEffect(isInteractive ? .regular.interactive() : .regular, in: shape)
-                .allowsHitTesting(!isDisabled)
-        } else {
-            let shape: AnyShape = capsuleButton ? AnyShape(.capsule) : AnyShape(.rect(cornerRadius: 12))
-            
-            configuration.label
-                .buttonStyle(.plain)
-                .frame(maxWidth: useFullWidth ? .infinity : nil)
-                .foregroundStyle(color)
-                .padding()
-                .background(color.opacity(0.2))
-                .background {
-                    if isMaterialButton {
-                        Color.clear.background(.ultraThinMaterial)
-                    }
-                }
-                .clipShape(shape)
-                .allowsHitTesting(!isDisabled)
-        }
-    }
-}
-
-struct GlassyTextFieldStyle: TextFieldStyle {
-    var color: Color = Color(.tertiarySystemFill)
-    var isDisabled: Bool = false
-    var capsuleField: Bool = false
-    var cornerRadius: CGFloat = 18
-    var isInteractive: Bool = true
-    
-    func _body(configuration: TextField<Self._Label>) -> some View {
-        let color: Color = isDisabled ? .gray : color
-        let fontColor: Color = isDisabled ? .gray : .primary
-        
-        if #available(iOS 26.0, *) {
-            let shape: AnyShape = capsuleField ? AnyShape(.capsule) : AnyShape(.rect(cornerRadius: cornerRadius))
-            let isInteractive: Bool = isDisabled ? false : true
-            
-            configuration
-                .textFieldStyle(.plain)
-                .frame(maxWidth: .infinity)
-                .foregroundStyle(fontColor)
-                .padding()
-                .background(color.opacity(0.2))
-                .clipShape(shape)
-                .glassEffect(isInteractive ? .regular.interactive() : .regular, in: shape)
-                .allowsHitTesting(!isDisabled)
-        } else {
-            let shape: AnyShape = capsuleField ? AnyShape(.capsule) : AnyShape(.rect(cornerRadius: 12))
-            
-            configuration
-                .textFieldStyle(.plain)
-                .frame(maxWidth: .infinity)
-                .foregroundStyle(fontColor)
-                .padding()
-                .background(color.opacity(0.2))
-                .clipShape(shape)
-                .allowsHitTesting(!isDisabled)
-        }
-    }
-}
-
 struct DefaultHeader: View {
     let label: String
     let icon: String
@@ -144,90 +61,6 @@ struct DefaultDropdown: View {
         .padding(.top)
         .opacity(0.6)
         .padding(.leading, 6)
-    }
-}
-
-struct ListItemStyle: ViewModifier {
-    var color: Color = .accent
-    
-    func body(content: Content) -> some View {
-        if #available(iOS 26.0, *) {
-            content
-                .foregroundStyle(color)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding()
-                .background(color.opacity(0.2))
-                .glassEffect(.regular.interactive(), in: .rect(cornerRadius: 20))
-                .clipShape(.rect(cornerRadius: 20))
-        } else {
-            content
-                .foregroundStyle(color)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding()
-                .background(color.opacity(0.2))
-                .clipShape(.rect(cornerRadius: 14))
-        }
-    }
-}
-
-struct ToolbarItemBackground: ButtonStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        if #available(iOS 26.0, *) {
-            configuration.label
-                .frame(width: 28, height: 28)
-        } else {
-            configuration.label
-                .foregroundStyle(.accent)
-        }
-    }
-}
-
-// MARK: Welcome Sheet
-struct WelcomeSheet<Content: View>: View {
-    var title: String
-    @ViewBuilder var content: Content
-    
-    var body: some View {
-        VStack {
-            VStack {
-                Text("Welcome To")
-                    .font(.system(.title, weight: .medium))
-                Text(title)
-                    .font(.system(.largeTitle, weight: .bold))
-                    .foregroundStyle(.accent)
-            }
-            .padding(.vertical, 60)
-            VStack(alignment: .leading, spacing: 18) {
-                content
-            }
-            .padding(.horizontal, 10)
-            .frame(maxWidth: .infinity)
-            Spacer()
-        }
-    }
-}
-
-struct WelcomeSheetRow: View {
-    var header: String
-    var text: String
-    var icon: String
-    
-    var body: some View {
-        HStack(spacing: 12) {
-            Image(systemName: icon)
-                .imageScale(.large)
-                .frame(width: 40, height: 40)
-                .foregroundStyle(.accent)
-            VStack(alignment: .leading) {
-                Text(header)
-                    .font(.system(.headline))
-                    .foregroundStyle(.accent)
-                Text(text)
-                    .multilineTextAlignment(.leading)
-                    .opacity(0.8)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-        }
     }
 }
 
@@ -298,7 +131,7 @@ struct ApplicationsList: View {
                                         Text(displayAppName(item: item))
                                             .lineLimit(1)
                                     }
-                                    .modifier(ListItemStyle())
+                                    .modifier(GlassyListRowBackground())
                                 }
                             }
                         }
@@ -358,7 +191,7 @@ struct CustomApplicationsList: View {
                                         Text(key)
                                             .lineLimit(1)
                                     }
-                                    .modifier(ListItemStyle())
+                                    .modifier(GlassyListRowBackground())
                                 }
                             }
                         }

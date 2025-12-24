@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import PartyUI
 
 struct CustomAppView: View {
     @AppStorage("customAppList") var customAppList: [String: String] = [:]
@@ -20,7 +21,7 @@ struct CustomAppView: View {
                     Image(systemName: "paintpalette")
                     Text("Custom App")
                 }) {
-                    VStack {
+                    VStack(spacing: 12) {
                         TextField("App Label", text: $appLabel)
                                 .textFieldStyle(GlassyTextFieldStyle())
                         HStack {
@@ -32,8 +33,9 @@ struct CustomAppView: View {
                                 appBundleID = UIPasteboard.general.string ?? ""
                             }) {
                                 Image(systemName: "doc.on.doc")
+                                    .frame(width: 18)
                             }
-                            .buttonStyle(GlassyButton())
+                            .buttonStyle(GlassyButtonStyle())
                             .frame(width: 50)
                         }
                         Button(action: {
@@ -51,7 +53,7 @@ struct CustomAppView: View {
                                 Text("Add Item")
                             }
                         }
-                        .buttonStyle(GlassyButton(useFullWidth: true, isDisabled: appBundleID.isEmpty))
+                        .buttonStyle(GlassyButtonStyle(isDisabled: appBundleID.isEmpty, useFullWidth: true))
                     }
                 }
             }
@@ -64,7 +66,6 @@ struct CustomAppView: View {
                     }) {
                         Image(systemName: "xmark")
                     }
-                    .buttonStyle(ToolbarItemBackground())
                 }
             }
         }

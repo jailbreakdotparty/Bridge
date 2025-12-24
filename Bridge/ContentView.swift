@@ -7,6 +7,7 @@
 
 import SwiftUI
 import UIKit
+import PartyUI
 
 struct ContentView: View {
     @AppStorage("mainPartitionAppList") var mainPartitionAppList: [String] = []
@@ -41,7 +42,6 @@ struct ContentView: View {
                     }) {
                         Image(systemName: "gearshape")
                     }
-                    .buttonStyle(ToolbarItemBackground())
                 }
                 ToolbarItem(placement: .topBarLeading) {
                     Button(action: {
@@ -49,7 +49,6 @@ struct ContentView: View {
                     }) {
                         Image(systemName: "plus.app")
                     }
-                    .buttonStyle(ToolbarItemBackground())
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button(action: {
@@ -61,7 +60,6 @@ struct ContentView: View {
                             Image(systemName: "arrow.up.forward.app")
                         }
                     }
-                    .buttonStyle(ToolbarItemBackground())
                 }
             }
         }

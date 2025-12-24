@@ -7,11 +7,13 @@
 
 import SwiftUI
 import DeviceKit
+import PartyUI
 
 struct SettingsView: View {
     @AppStorage("mainPartitionAppList") var mainPartitionAppList: [String] = []
     @AppStorage("secondaryPartitionAppList") var secondaryPartitionAppList: [String] = []
     @AppStorage("favoritesAppList") var favoritesAppList: [String] = []
+    @AppStorage("customAppList") var customAppList: [String: String] = [:]
     @Environment(\.openURL) var openURL
     @Environment(\.dismiss) var dismiss
     @AppStorage("openWithShortcuts") var openWithShortcuts: Bool = false
@@ -25,7 +27,7 @@ struct SettingsView: View {
                         .frame(width: 18, height: 22)
                     Text("About")
                 }) {
-                    VStack(alignment: .leading, spacing: 8) {
+                    VStack(alignment: .leading, spacing: 12) {
                         HStack(spacing: 12) {
                             Image("Bridge")
                                 .resizable()
@@ -51,7 +53,7 @@ struct SettingsView: View {
                                     Text("Website")
                                 }
                             }
-                            .buttonStyle(GlassyButton(color: .blue, useFullWidth: true))
+                            .buttonStyle(GlassyButtonStyle(color: .blue, useFullWidth: true))
                         }
                         HStack {
                             Button(action: {
@@ -68,7 +70,7 @@ struct SettingsView: View {
                                     Text("Discord")
                                 }
                             }
-                            .buttonStyle(GlassyButton(color: .discord, useFullWidth: true))
+                            .buttonStyle(GlassyButtonStyle(color: .discord, useFullWidth: true))
                             Button(action: {
                                 Haptic.shared.play(.soft)
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
@@ -83,7 +85,7 @@ struct SettingsView: View {
                                     Text("GitHub")
                                 }
                             }
-                            .buttonStyle(GlassyButton(color: .gitHub, useFullWidth: true))
+                            .buttonStyle(GlassyButtonStyle(color: .gitHub, useFullWidth: true))
                         }
                     }
                 }
@@ -122,7 +124,7 @@ struct SettingsView: View {
                         .frame(width: 18, height: 22)
                     Text("Actions")
                 }) {
-                    VStack {
+                    VStack(spacing: 12) {
                         Button(action: {
                             Haptic.shared.play(.soft)
                             favoritesAppList.removeAll()
@@ -132,7 +134,7 @@ struct SettingsView: View {
                                 Text("Remove Favorties")
                             }
                         }
-                        .buttonStyle(GlassyButton(color: .accent, useFullWidth: true))
+                        .buttonStyle(GlassyButtonStyle(color: .accent, useFullWidth: true))
                         Button(action: {
                             Alertinator.shared.alert(title: "Are you sure you want to do this?", body: "This will reset all settings, favorites, and your currently imported applist.",showCancel: true, actionLabel: "Reset Application", action: {
                                 Haptic.shared.play(.soft)
@@ -140,6 +142,7 @@ struct SettingsView: View {
                                     mainPartitionAppList.removeAll()
                                     secondaryPartitionAppList.removeAll()
                                     favoritesAppList.removeAll()
+                                    customAppList.removeAll()
                                     openWithShortcuts = false
                                     enableFavorites = true
                                     exitinator()
@@ -151,7 +154,7 @@ struct SettingsView: View {
                                 Text("Reset Application")
                             }
                         }
-                        .buttonStyle(GlassyButton(color: .red, useFullWidth: true))
+                        .buttonStyle(GlassyButtonStyle(color: .red, useFullWidth: true))
                     }
                 }
             }
@@ -164,7 +167,6 @@ struct SettingsView: View {
                     }) {
                         Image(systemName: "xmark")
                     }
-                    .buttonStyle(ToolbarItemBackground())
                 }
             }
         }
