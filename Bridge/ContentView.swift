@@ -22,18 +22,15 @@ struct ContentView: View {
     
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading) {
-                    CustomApplicationsList()
-                    if enableFavorites {
-                        ApplicationsList(appList: $favoritesAppList, label: "Favorited", icon: "star", isFavoritesList: true)
-                    }
-                    ApplicationsList(appList: $mainPartitionAppList, label: "/Applications", icon: "square.grid.2x2")
-                    ApplicationsList(appList: $secondaryPartitionAppList, label: "/System/Library/CoreServices", icon: "externaldrive")
+            List {
+                CustomApplicationsList()
+                if enableFavorites {
+                    ApplicationsList(appList: $favoritesAppList, label: "Favorited", icon: "star", isFavoritesList: true)
                 }
-                .frame(alignment: .leading)
-                .padding(.horizontal, 15)
+                ApplicationsList(appList: $mainPartitionAppList, label: "/Applications", icon: "square.grid.2x2")
+                ApplicationsList(appList: $secondaryPartitionAppList, label: "/System/Library/CoreServices", icon: "externaldrive")
             }
+            .listStyle(.plain)
             .navigationTitle("Bridge")
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
@@ -43,11 +40,11 @@ struct ContentView: View {
                         Image(systemName: "gearshape")
                     }
                 }
-                ToolbarItem(placement: .topBarLeading) {
+                ToolbarItem(placement: .topBarTrailing) {
                     Button(action: {
                         showCustomAppView = true
                     }) {
-                        Image(systemName: "plus.app")
+                        Image(systemName: "paintpalette")
                     }
                 }
                 ToolbarItem(placement: .topBarTrailing) {

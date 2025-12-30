@@ -22,11 +22,7 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack {
             List {
-                Section(header: HStack {
-                    Image(systemName: "info.circle")
-                        .frame(width: 18, height: 22)
-                    Text("About")
-                }) {
+                Section(header: HeaderLabel(text: "About", icon: "info.circle")) {
                     VStack(alignment: .leading, spacing: 12) {
                         HStack(spacing: 12) {
                             Image("Bridge")
@@ -48,10 +44,7 @@ struct SettingsView: View {
                                     openURL(URL(string: "https://jailbreak.party")!)
                                 }
                             }) {
-                                HStack {
-                                    Image(systemName: "globe")
-                                    Text("Website")
-                                }
+                                ButtonLabel(text: "Website", icon: "globe")
                             }
                             .buttonStyle(GlassyButtonStyle(color: .blue, useFullWidth: true))
                         }
@@ -62,13 +55,7 @@ struct SettingsView: View {
                                     openURL(URL(string: "https://jailbreak.party/discord")!)
                                 }
                             }) {
-                                HStack {
-                                    Image("discord")
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(maxWidth: 22, maxHeight: 22)
-                                    Text("Discord")
-                                }
+                                ButtonLabel(text: "Discord", icon: "discord", isRegularImage: true)
                             }
                             .buttonStyle(GlassyButtonStyle(color: .discord, useFullWidth: true))
                             Button(action: {
@@ -77,23 +64,13 @@ struct SettingsView: View {
                                     openURL(URL(string: "https://jailbreak.party/discord")!)
                                 }
                             }) {
-                                HStack {
-                                    Image("github")
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(maxWidth: 22, maxHeight: 22)
-                                    Text("GitHub")
-                                }
+                                ButtonLabel(text: "GitHub", icon: "github", isRegularImage: true)
                             }
                             .buttonStyle(GlassyButtonStyle(color: .gitHub, useFullWidth: true))
                         }
                     }
                 }
-                Section(header: HStack {
-                    Image(systemName: device.isPad ? "ipad" : "iphone")
-                        .frame(width: 18, height: 22)
-                    Text("Device Information")
-                }) {
+                Section(header: HeaderLabel(text: "Support Status", icon: device.isPad ? "ipad" : "iphone")) {
                     VStack(alignment: .leading, spacing: 6) {
                         HStack(spacing: 10) {
                             Image(systemName: isBridgeSupported() ? "checkmark.circle.fill" : "exclamationmark.triangle.fill")
@@ -108,31 +85,23 @@ struct SettingsView: View {
                             }
                             .frame(maxWidth: .infinity, alignment: .leading)
                         }
-                        Text(isBridgeSupported() ? "Your device supports Bridge fully, and can read applications in the necessary directories." : "Your device supports Bridge, however, you cannot fetch applications from your device. This may cause some applications that aren't actually installed on your device to appear.")
+                        Text(isBridgeSupported() ? "Your device supports Bridge fully, and can read applications in the necessary directories." : "Some applications could not be feteched from your personal device, so the list may not be accurate.")
                     }
                 }
-                Section(header: HStack {
-                    Image(systemName: "gearshape")
-                        .frame(width: 18, height: 22)
-                    Text("Settings")
-                }) {
+                Section(header: HeaderLabel(text: "Credits", icon: "person")) {
+                    LinkCreditCell(image: "lunginspector", name: "lunginspector", text: "Primary Developer", link: "https://github.com/lunginspector")
+                }
+                Section(header: HeaderLabel(text: "Settings", icon: "gearshape")) {
                     Toggle("Enable Favorites", isOn: $enableFavorites)
                     Toggle("Open App with Shortcuts", isOn: $openWithShortcuts)
                 }
-                Section(header: HStack {
-                    Image(systemName: "wrench.and.screwdriver")
-                        .frame(width: 18, height: 22)
-                    Text("Actions")
-                }) {
+                Section(header: HeaderLabel(text: "Actions", icon: "wrench.and.screwdriver")) {
                     VStack(spacing: 12) {
                         Button(action: {
                             Haptic.shared.play(.soft)
                             favoritesAppList.removeAll()
                         }) {
-                            HStack {
-                                Image(systemName: "star.slash")
-                                Text("Remove Favorties")
-                            }
+                            ButtonLabel(text: "Reset Favorites", icon: "star.slash")
                         }
                         .buttonStyle(GlassyButtonStyle(color: .accent, useFullWidth: true))
                         Button(action: {
@@ -149,10 +118,7 @@ struct SettingsView: View {
                                 }
                             })
                         }) {
-                            HStack {
-                                Image(systemName: "xmark")
-                                Text("Reset Application")
-                            }
+                            ButtonLabel(text: "Reset Application", icon: "trash")
                         }
                         .buttonStyle(GlassyButtonStyle(color: .red, useFullWidth: true))
                     }

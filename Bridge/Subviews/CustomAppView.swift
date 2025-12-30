@@ -17,10 +17,7 @@ struct CustomAppView: View {
     var body: some View {
         NavigationStack {
             List {
-                Section(header: HStack {
-                    Image(systemName: "paintpalette")
-                    Text("Custom App")
-                }) {
+                Section(header: HeaderLabel(text: "Custom Application", icon: "plus.app")) {
                     VStack(spacing: 12) {
                         TextField("App Label", text: $appLabel)
                                 .textFieldStyle(GlassyTextFieldStyle())
@@ -48,10 +45,7 @@ struct CustomAppView: View {
                                 dismiss()
                             }
                         }) {
-                            HStack {
-                                Image(systemName: "plus")
-                                Text("Add Item")
-                            }
+                            ButtonLabel(text: "Add Application", icon: "plus.app")
                         }
                         .buttonStyle(GlassyButtonStyle(isDisabled: appBundleID.isEmpty, useFullWidth: true))
                     }

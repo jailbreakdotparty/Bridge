@@ -38,6 +38,11 @@ extension UIApplication {
     }
 }
 
+extension EdgeInsets {
+    static let dropdownRowInsets = EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16)
+    static let itemRowInsets = EdgeInsets(top: 16, leading: 16, bottom: 0, trailing: 16)
+}
+
 func doubleSystemVersion() -> Double {
     let rawSystemVersion = UIDevice.current.systemVersion
     let parsedSystemVersion = rawSystemVersion.split(separator: ".").prefix(2).joined(separator: ".")
