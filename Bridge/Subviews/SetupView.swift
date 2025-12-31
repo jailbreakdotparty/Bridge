@@ -87,13 +87,11 @@ struct SetupView: View {
             }
             .padding(.horizontal, 20)
             .background {
-                if colorScheme == .dark {
-                    AuroraBackground(color1: "591F76", color2: "5B2477", color3: "510D74", color4: "4D1867", background: "1F092A")
-                        .ignoresSafeArea()
-                } else {
-                    AuroraBackground(color1: "E8B9FF", color2: "DB94FF", color3: "D684FF", color4: "DF9FFF", background: "F0D2FF")
-                        .ignoresSafeArea()
+                ZStack {
+                    Color(.reasonableBackground)
+                    AuroraBackground(color1: .accent.opacity(0.1), color2: .accent.opacity(0.1), color3: .accent.opacity(0.1), color4: .accent.opacity(0.1), background: .accent.opacity(0.1))
                 }
+                .ignoresSafeArea()
             }
         }
     }

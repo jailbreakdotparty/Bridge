@@ -23,69 +23,67 @@ struct ApplicationsList: View {
         Section(header: HStack {
             let appCount = appList.count
             HeaderDropdown(text: label, icon: icon, isExpanded: $isExpanded, useCount: true, itemCount: appCount)
+                .opacity(0.5)
+                .fontWeight(.semibold)
         }) {
             if isExpanded {
                 let columns = Array(repeating: GridItem(.flexible(), spacing: 8), count: UIApplication.isPad ? 3 : 1)
                 LazyVGrid(columns: columns, spacing: 10) {
                     ForEach(appList, id: \.self) { item in
-                        VStack {
-                            Menu {
+                        Menu {
+                            Button(action: {
+                                Haptic.shared.play(.soft)
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                                    handleApplication(handleType: "open", application: item)
+                                }
+                            }) {
+                                Label("Open App", systemImage: "arrow.up.forward")
+                            }
+                            if isBridgeSupported() || !isBridgeSupported() && !isApplicationInMainPartition(item: item) {
                                 Button(action: {
                                     Haptic.shared.play(.soft)
                                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-                                        handleApplication(handleType: "open", application: item)
+                                        handleApplication(handleType: "export", application: item)
                                     }
                                 }) {
-                                    Label("Open App", systemImage: "arrow.up.forward")
+                                    Label("Export Bundle", systemImage: "archivebox")
                                 }
-                                if isBridgeSupported() || !isBridgeSupported() && !isApplicationInMainPartition(item: item) {
-                                    Button(action: {
-                                        Haptic.shared.play(.soft)
-                                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-                                            handleApplication(handleType: "export", application: item)
-                                        }
-                                    }) {
-                                        Label("Export Bundle", systemImage: "archivebox")
-                                    }
-                                }
-                                Divider()
-                                if isFavoritesList {
-                                    Button(action: {
-                                        Haptic.shared.play(.soft)
-                                        favoritesAppList.removeAll { $0 == item }
-                                    }) {
-                                        Label("Remove Favorite", systemImage: "star.slash")
-                                    }
-                                } else {
-                                    Button(action: {
-                                        Haptic.shared.play(.soft)
-                                        if !favoritesAppList.contains(item) {
-                                            favoritesAppList.append(item)
-                                        } else {
-                                            Alertinator.shared.alert(title: "Error!", body: "This app has already been favorited.")
-                                        }
-                                    }) {
-                                        Label("Favorite", systemImage: "star")
-                                    }
-                                }
-                            } label: {
-                                HStack {
-                                    Image(systemName: "app")
-                                        .resizable()
-                                        .frame(width: 16, height: 16)
-                                    Text(displayAppName(item: item))
-                                        .lineLimit(1)
-                                }
-                                .modifier(GlassyListRowBackground())
                             }
+                            Divider()
+                            if isFavoritesList {
+                                Button(action: {
+                                    Haptic.shared.play(.soft)
+                                    favoritesAppList.removeAll { $0 == item }
+                                }) {
+                                    Label("Remove Favorite", systemImage: "star.slash")
+                                }
+                            } else {
+                                Button(action: {
+                                    Haptic.shared.play(.soft)
+                                    if !favoritesAppList.contains(item) {
+                                        favoritesAppList.append(item)
+                                    } else {
+                                        Alertinator.shared.alert(title: "Error!", body: "This app has already been favorited.")
+                                    }
+                                }) {
+                                    Label("Favorite", systemImage: "star")
+                                }
+                            }
+                        } label: {
+                            HStack {
+                                Image(systemName: "app")
+                                    .resizable()
+                                    .frame(width: 16, height: 16)
+                                Text(displayAppName(item: item))
+                                    .lineLimit(1)
+                            }
+                            .modifier(GlassyListRowBackground())
                         }
                     }
                 }
-                .listRowInsets(.itemRowInsets)
-                .listRowSeparator(.hidden)
             }
         }
-        .listRowInsets(.dropdownRowInsets)
+        .padding(.horizontal, 16)
     }
 }
 
@@ -98,6 +96,8 @@ struct CustomApplicationsList: View {
         Section(header: HStack {
             let appCount = customAppList.keys.count
             HeaderDropdown(text: "Custom Applications", icon: "paintpalette", isExpanded: $isExpanded, useCount: true, itemCount: appCount)
+                .opacity(0.5)
+                .fontWeight(.semibold)
         }) {
             
             if isExpanded {
@@ -137,10 +137,8 @@ struct CustomApplicationsList: View {
                         }
                     }
                 }
-                .listRowInsets(.itemRowInsets)
-                .listRowSeparator(.hidden)
             }
         }
-        .listRowInsets(.dropdownRowInsets)
+        .padding(.horizontal, 16)
     }
 }

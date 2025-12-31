@@ -22,13 +22,21 @@ struct ContentView: View {
     
     var body: some View {
         NavigationStack {
-            List {
-                CustomApplicationsList()
-                if enableFavorites {
-                    ApplicationsList(appList: $favoritesAppList, label: "Favorited", icon: "star", isFavoritesList: true)
+            ScrollView {
+                VStack(spacing: 14) {
+                    CustomApplicationsList()
+                    if enableFavorites {
+                        ApplicationsList(appList: $favoritesAppList, label: "Favorited", icon: "star", isFavoritesList: true)
+                    }
+                    ApplicationsList(appList: $mainPartitionAppList, label: "/Applications", icon: "square.grid.2x2")
+                    ApplicationsList(appList: $secondaryPartitionAppList, label: "/System/Library/CoreServices", icon: "externaldrive")
                 }
-                ApplicationsList(appList: $mainPartitionAppList, label: "/Applications", icon: "square.grid.2x2")
-                ApplicationsList(appList: $secondaryPartitionAppList, label: "/System/Library/CoreServices", icon: "externaldrive")
+            }
+            .safeAreaInset(edge: .bottom) {
+                OverlayButtonContainer(content: VStack {
+                    Color.clear
+                        .frame(maxHeight: 1)
+                })
             }
             .listStyle(.plain)
             .navigationTitle("Bridge")

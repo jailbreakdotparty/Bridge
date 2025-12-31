@@ -38,8 +38,8 @@ extension UIApplication {
 }
 
 extension EdgeInsets {
-    static let dropdownRowInsets = EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16)
-    static let itemRowInsets = EdgeInsets(top: 16, leading: 16, bottom: 0, trailing: 16)
+    static let dropdownRowInsets = EdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 16)
+    static let itemRowInsets = EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16)
 }
 
 func doubleSystemVersion() -> Double {
