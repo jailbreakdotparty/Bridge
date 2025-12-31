@@ -14,6 +14,7 @@ struct SetupView: View {
     @AppStorage("secondaryPartitionAppList") var secondaryPartitionAppList: [String] = []
     @Environment(\.openURL) var openURL
     @Environment(\.dismiss) var dismiss
+    @Environment(\.colorScheme) var colorScheme: ColorScheme
     @State private var hasShortcutRun: Bool = false
     
     var body: some View {
@@ -85,6 +86,15 @@ struct SetupView: View {
                 })
             }
             .padding(.horizontal, 20)
+            .background {
+                if colorScheme == .dark {
+                    AuroraBackground(color1: "591F76", color2: "5B2477", color3: "510D74", color4: "4D1867", background: "1F092A")
+                        .ignoresSafeArea()
+                } else {
+                    AuroraBackground(color1: "E8B9FF", color2: "DB94FF", color3: "D684FF", color4: "DF9FFF", background: "F0D2FF")
+                        .ignoresSafeArea()
+                }
+            }
         }
     }
 }

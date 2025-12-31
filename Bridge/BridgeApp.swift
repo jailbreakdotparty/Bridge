@@ -14,7 +14,6 @@ let device = Device.current
 @main
 struct BridgeApp: App {
     init() {
-        // i love skidding from skadz
         #if DEBUG
         weOnADebugBuild = true
         #else

@@ -8,6 +8,7 @@
 import SwiftUI
 import UIKit
 import Combine
+import PartyUI
 
 func handleApplication(handleType: String, application: String) {
     @Environment(\.openURL) var openURL

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Combine
+import PartyUI
 
 func processAppList(clipboardContents: String, completion: @escaping (_ applistProcessed: Bool) -> Void) {
     @AppStorage("mainPartitionAppList") var mainPartitionAppList: [String] = []

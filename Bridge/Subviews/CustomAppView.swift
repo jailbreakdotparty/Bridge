@@ -27,6 +27,7 @@ struct CustomAppView: View {
                                 .autocorrectionDisabled()
                                 .autocapitalization(.none)
                             Button(action: {
+                                Haptic.shared.play(.soft)
                                 appBundleID = UIPasteboard.general.string ?? ""
                             }) {
                                 Image(systemName: "doc.on.doc")
@@ -36,6 +37,7 @@ struct CustomAppView: View {
                             .frame(width: 50)
                         }
                         Button(action: {
+                            Haptic.shared.play(.soft)
                             if customAppList.values.contains(appBundleID) {
                                 Alertinator.shared.alert(title: "That Bundle ID has already been added!", body: "Please try a different Bundle ID.")
                             } else {
