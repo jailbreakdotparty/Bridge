@@ -1,3 +1,6 @@
+>[!WARNING]
+>This project is discontinued and may not function as expected. Please do not ask for support regardng this application!
+
 # Bridge
 ### An *internal* system app opener & extractor for jailed iDevices running iOS 16 and later.
 [Latest Release](https://github.com/jailbreakdotparty/Bridge/releases/latest) • [Support Server](https://jailbreak.party/discord) • [Website](https://jailbreak.party) • [Documented Applications](https://gist.github.com/lunginspector/783adaa5e34b4063d38a90cb30ae0986)
